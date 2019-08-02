@@ -6,6 +6,9 @@ import android.widget.Button
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import dev.tran.nam.sort.algorithm.R
+import dev.tran.nam.sortalgorithm.view.SortType
+import dev.tran.nam.sortalgorithm.view.SortView
+import dev.tran.nam.sortalgorithm.view.SortViewListener
 
 class MainActivity : AppCompatActivity(), SortViewListener {
 

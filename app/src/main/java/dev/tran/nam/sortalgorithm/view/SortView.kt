@@ -1,20 +1,19 @@
-package dev.tran.nam.sortalgorithm
+package dev.tran.nam.sortalgorithm.view
 
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.*
-import android.os.Parcel
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Parcelable
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
-
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Stack
+import java.util.*
 
 /**
  * Created by NamTran on 4/6/2017.
@@ -244,7 +243,12 @@ class SortView : View {
         when (sortType) {
             SortType.SELECTIONSORT, SortType.INSERTIONSORTI -> temp = 0
             SortType.BUBBLESORT -> temp = mListSortValue!!.size - 1
-            SortType.QUICKSORT -> stackQuickRange!!.push(QuickRange(0, mListSortValue!!.size - 1))
+            SortType.QUICKSORT -> stackQuickRange!!.push(
+                QuickRange(
+                    0,
+                    mListSortValue!!.size - 1
+                )
+            )
         }
         invalidate()
     }
@@ -753,7 +757,12 @@ class SortView : View {
             val yBottom = height / 2 + 50
             if (mListSortValue!!.size == 0) {
                 for (value in mValues!!) {
-                    mListSortValue!!.add(SortValue(Rect(xLeft, yTop, xRight, yBottom), value))
+                    mListSortValue!!.add(
+                        SortValue(
+                            Rect(xLeft, yTop, xRight, yBottom),
+                            value
+                        )
+                    )
                     xLeft = xRight
                     xRight = xRight + rectSize
                 }
@@ -1085,153 +1094,4 @@ class SortView : View {
     }
 }
 
-enum class SortType {
-    SELECTIONSORT, INSERTIONSORTI, INSERTIONSORTII, BUBBLESORT, QUICKSORT
-}
 
-//internal class SortValue : Parcelable {
-//
-//    var rect: Rect? = null
-//        private set
-//    var value: Int = 0
-//    var isSort: Boolean = false
-//
-//    private constructor(`in`: Parcel) {
-//        rect = `in`.readParcelable(Rect::class.java.classLoader)
-//        value = `in`.readInt()
-//        isSort = `in`.readByte().toInt() != 0
-//    }
-//
-//    constructor(rect: Rect, valueText: Int) {
-//        this.rect = rect
-//        value = valueText
-//    }
-//
-//    override fun describeContents(): Int {
-//        return 0
-//    }
-//
-//    override fun writeToParcel(dest: Parcel, flags: Int) {
-//        dest.writeParcelable(rect, flags)
-//        dest.writeInt(value)
-//        dest.writeByte((if (isSort) 1 else 0).toByte())
-//    }
-//
-//    companion object {
-//
-//        val CREATOR: Parcelable.Creator<SortValue> = object : Parcelable.Creator<SortValue> {
-//            override fun createFromParcel(`in`: Parcel): SortValue {
-//                return SortValue(`in`)
-//            }
-//
-//            override fun newArray(size: Int): Array<SortValue> {
-//                return arrayOfNulls(size)
-//            }
-//        }
-//    }
-//}
-
-//internal class PivotPointView {
-//    var pointText: Point? = null
-//        private set
-//    var firstLine: Point? = null
-//        private set
-//    var lastLine: Point? = null
-//        private set
-//    var pathArrow: Path? = null
-//        private set
-//
-//    init {
-//        init()
-//    }
-//
-//    private fun init() {
-//        pointText = Point()
-//        firstLine = Point()
-//        lastLine = Point()
-//        pathArrow = Path()
-//    }
-//
-//    fun setPoint(x: Int, y: Int) {
-//        pointText!!.set(x, y)
-//        val yArrow = y - 40
-//        val yArrowPeak = yArrow - 70
-//        firstLine!!.set(x, yArrow)
-//        lastLine!!.set(x, yArrowPeak + 5)
-//        pathArrow!!.moveTo(x.toFloat(), yArrowPeak.toFloat())
-//        pathArrow!!.lineTo((x - 10).toFloat(), (yArrowPeak + 10).toFloat())
-//        pathArrow!!.lineTo((x + 10).toFloat(), (yArrowPeak + 10).toFloat())
-//        pathArrow!!.lineTo(x.toFloat(), yArrowPeak.toFloat())
-//    }
-//
-//    fun clear() {
-//        pathArrow!!.reset()
-//    }
-//}
-
-//internal class QuickRange(val firstPosition: Int, val lastPosition: Int)
-
-//internal class SavedState : View.BaseSavedState {
-//    var begin: Int = 0
-//    var insertionsortTemp: Int = 0
-//    var temp: Int = 0
-//
-//    var isAnimation: Boolean = false
-//    var isStartAnimation: Boolean = false
-//    var insertionWhile: Boolean = false
-//    var insertionNotSwap: Boolean = false
-//
-//    var mDistance: Int = 0
-//
-//    var sortValues: List<SortValue>? = null
-//
-//    constructor(superState: Parcelable) : super(superState) {}
-//
-//    private constructor(`in`: Parcel) : super(`in`) {
-//        this.begin = `in`.readInt()
-//        this.insertionsortTemp = `in`.readInt()
-//        this.temp = `in`.readInt()
-//        this.mDistance = `in`.readInt()
-//        this.isAnimation = `in`.readByte().toInt() != 0
-//        this.isStartAnimation = `in`.readByte().toInt() != 0
-//        this.insertionWhile = `in`.readByte().toInt() != 0
-//        this.insertionNotSwap = `in`.readByte().toInt() != 0
-//
-//        `in`.readList(this.sortValues!!, SortValue::class.java.classLoader)
-//    }
-//
-//    override fun writeToParcel(out: Parcel, flags: Int) {
-//        super.writeToParcel(out, flags)
-//        out.writeInt(this.begin)
-//        out.writeInt(this.insertionsortTemp)
-//        out.writeInt(this.temp)
-//        out.writeInt(this.mDistance)
-//        out.writeByte((if (isAnimation) 1 else 0).toByte())
-//        out.writeByte((if (isStartAnimation) 1 else 0).toByte())
-//        out.writeByte((if (insertionWhile) 1 else 0).toByte())
-//        out.writeByte((if (insertionNotSwap) 1 else 0).toByte())
-//
-//        out.writeList(sortValues)
-//    }
-//
-//    companion object {
-//
-//        //required field that makes Parcelables from a Parcel
-//        val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
-//            override fun createFromParcel(`in`: Parcel): SavedState {
-//                return SavedState(`in`)
-//            }
-//
-//            override fun newArray(size: Int): Array<SavedState> {
-//                return arrayOfNulls(size)
-//            }
-//        }
-//    }
-//
-//}
-
-interface SortViewListener {
-    fun startAnimation()
-
-    fun completeAnimation()
-}

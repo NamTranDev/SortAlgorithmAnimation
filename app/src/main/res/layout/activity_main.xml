@@ -63,7 +63,7 @@
         </LinearLayout>
     </dev.tran.nam.sortalgorithm.RadioGroupPlus>
 
-    <dev.tran.nam.sortalgorithm.SortView
+    <dev.tran.nam.sortalgorithm.view.SortView
             android:id="@+id/sortView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

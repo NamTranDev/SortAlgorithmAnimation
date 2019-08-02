@@ -1,4 +1,4 @@
-package dev.tran.nam.sortalgorithm
+package dev.tran.nam.sortalgorithm.view
 
 import android.graphics.Path
 import android.graphics.Point

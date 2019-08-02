@@ -1,19 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="dev.tran.nam.chart.sortalgorithm.MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="dev.tran.nam.sortalgorithm.MainActivity">
 
-    <TextView
+    <dev.tran.nam.sortalgorithm.RadioGroupPlus
+            android:id="@+id/rg_sort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <RadioButton
+                    android:id="@+id/rb_selection_sort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selection Sort"
+                    android:textSize="17.5sp" />
+
+            <RadioButton
+                    android:id="@+id/rb_insertion_sort_i"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Insertion Sort I"
+                    android:textSize="17.5sp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <RadioButton
+                    android:id="@+id/rb_insertion_sort_ii"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Insertion Sort II"
+                    android:textSize="17.5sp" />
+
+            <RadioButton
+                    android:id="@+id/rb_bubble_sort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bubble Sort"
+                    android:textSize="17.5sp" />
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <RadioButton
+                    android:id="@+id/rb_quick_sort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quick Sort"
+                    android:textSize="17.5sp" />
+
+        </LinearLayout>
+    </dev.tran.nam.sortalgorithm.RadioGroupPlus>
+
+    <dev.tran.nam.sortalgorithm.SortView
+            android:id="@+id/sortView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp" />
+
+    <Button
+            android:id="@+id/btStartAnimation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Start Animation" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
+

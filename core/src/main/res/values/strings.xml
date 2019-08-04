@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ErrorState Message -->
+    <string name="error_unknown">Cannot retrieve data. Please try again!</string>
+    <string name="error_no_internet_connection">There is no internet connection</string>
+    <string name="error_timeout">Timeout error. Please try again!</string>
+    <string name="error_connection_refused">Connection error. Please try again!</string>
+
+    <string name="unknown_error">"Unknown Error</string>
+    <string name="bt_retry">Retry</string>
+    <string name="text_ok">OK</string>
+    <string name="text_yes">YES</string>
+    <string name="text_no">NO</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="title_error">Error</string>
+
+</resources>

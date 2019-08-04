@@ -1,82 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="dev.tran.nam.sortalgorithm.MainActivity">
-
-    <dev.tran.nam.sortalgorithm.RadioGroupPlus
-            android:id="@+id/rg_sort"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            <RadioButton
-                    android:id="@+id/rb_selection_sort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Selection Sort"
-                    android:textSize="17.5sp" />
-
-            <RadioButton
-                    android:id="@+id/rb_insertion_sort_i"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Insertion Sort I"
-                    android:textSize="17.5sp" />
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            <RadioButton
-                    android:id="@+id/rb_insertion_sort_ii"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Insertion Sort II"
-                    android:textSize="17.5sp" />
-
-            <RadioButton
-                    android:id="@+id/rb_bubble_sort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bubble Sort"
-                    android:textSize="17.5sp" />
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            <RadioButton
-                    android:id="@+id/rb_quick_sort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Quick Sort"
-                    android:textSize="17.5sp" />
-
-        </LinearLayout>
-    </dev.tran.nam.sortalgorithm.RadioGroupPlus>
-
-    <dev.tran.nam.sortalgorithm.view.SortView
-            android:id="@+id/sortView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:padding="10dp" />
-
-    <Button
-            android:id="@+id/btStartAnimation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="Start Animation" />
-
-</RelativeLayout>
-
+<fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
+        tools:context="dev.tran.nam.sortalgorithm.view.MainActivity"/>

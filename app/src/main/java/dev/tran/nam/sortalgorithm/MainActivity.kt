@@ -52,10 +52,9 @@ class MainActivity : AppCompatActivity(), SortViewListener {
             }
         }
 
-        findViewById<Button>(R.id.btStartAnimation).setOnClickListener(View.OnClickListener {
-            sortView.returnDefault()
+        findViewById<Button>(R.id.btStartAnimation).setOnClickListener {
             sortView.startAnimation()
-        })
+        }
     }
 
 

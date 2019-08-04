@@ -21,7 +21,7 @@ import java.util.*
 
 class SortView : View {
 
-    private var mListSortValue: ArrayList<SortValue>? = null
+    private var mListSortValue: ArrayList<SortValue> = ArrayList()
     private var mValues: IntArray? = null
     private lateinit var mPaintRectNotSort: Paint
     private lateinit var mPaintRectSorted: Paint
@@ -30,9 +30,9 @@ class SortView : View {
     private lateinit var mPaintTextSort: TextPaint
     private var animatorTransitionYUpSmall: ValueAnimator? = null
     private var animatorTransitionYDownSmall: ValueAnimator? = null
-    private var animatorTransitionXSmall: ValueAnimator? = null
     private var animatorTransitionYDownLarge: ValueAnimator? = null
     private var animatorTransitionYUpLarge: ValueAnimator? = null
+    private var animatorTransitionXSmall: ValueAnimator? = null
     private var animatorTransitionXLarge: ValueAnimator? = null
     private var animationPivotQuickSort: ValueAnimator? = null
 
@@ -52,7 +52,7 @@ class SortView : View {
     private var isFindPivot: Boolean = false
     private var isPopRange: Boolean = false
 
-    private val DURATION = 500
+    private val mDuration = 500
 
     private var rectTempSmall: Rect? = null
     private var rectTempLarge: Rect? = null
@@ -62,8 +62,8 @@ class SortView : View {
     private var quickRange: QuickRange? = null
     private var pivot: SortValue? = null
     private var partition: Int = 0
-    private var L: Int = 0
-    private var R: Int = 0
+    private var mLeft: Int = 0
+    private var mRight: Int = 0
 
     //QuickSort
     private var stackQuickRange: Stack<QuickRange>? = null
@@ -82,37 +82,35 @@ class SortView : View {
 
     private fun init() {
 
-        mListSortValue = ArrayList()
-
         mPaintRectNotSort = Paint()
-        mPaintRectNotSort!!.strokeWidth = 2.5f
-        mPaintRectNotSort!!.isAntiAlias = true
-        mPaintRectNotSort!!.style = Paint.Style.STROKE
-        mPaintRectNotSort!!.strokeCap = Paint.Cap.ROUND
+        mPaintRectNotSort.strokeWidth = 2.5f
+        mPaintRectNotSort.isAntiAlias = true
+        mPaintRectNotSort.style = Paint.Style.STROKE
+        mPaintRectNotSort.strokeCap = Paint.Cap.ROUND
 
         mPaintRectSorted = Paint(Paint.ANTI_ALIAS_FLAG)
-        mPaintRectSorted!!.color = Color.BLUE
-        mPaintRectSorted!!.style = Paint.Style.FILL
-        mPaintRectSorted!!.strokeCap = Paint.Cap.ROUND
+        mPaintRectSorted.color = Color.BLUE
+        mPaintRectSorted.style = Paint.Style.FILL
+        mPaintRectSorted.strokeCap = Paint.Cap.ROUND
 
         mPaintLinePivot = Paint()
-        mPaintLinePivot!!.color = Color.BLACK
-        mPaintLinePivot!!.isAntiAlias = true
-        mPaintLinePivot!!.strokeWidth = 5f
+        mPaintLinePivot.color = Color.BLACK
+        mPaintLinePivot.isAntiAlias = true
+        mPaintLinePivot.strokeWidth = 5f
 
         mPaintTextNoSort = TextPaint()
-        mPaintTextNoSort!!.style = Paint.Style.FILL
-        mPaintTextNoSort!!.isAntiAlias = true
-        mPaintTextNoSort!!.color = Color.BLACK
-        mPaintTextNoSort!!.textSize = 40f
-        mPaintTextNoSort!!.textAlign = Paint.Align.CENTER
+        mPaintTextNoSort.style = Paint.Style.FILL
+        mPaintTextNoSort.isAntiAlias = true
+        mPaintTextNoSort.color = Color.BLACK
+        mPaintTextNoSort.textSize = 40f
+        mPaintTextNoSort.textAlign = Paint.Align.CENTER
 
         mPaintTextSort = TextPaint()
-        mPaintTextSort!!.style = Paint.Style.FILL
-        mPaintTextSort!!.isAntiAlias = true
-        mPaintTextSort!!.color = Color.CYAN
-        mPaintTextSort!!.textSize = 40f
-        mPaintTextSort!!.textAlign = Paint.Align.CENTER
+        mPaintTextSort.style = Paint.Style.FILL
+        mPaintTextSort.isAntiAlias = true
+        mPaintTextSort.color = Color.CYAN
+        mPaintTextSort.textSize = 40f
+        mPaintTextSort.textAlign = Paint.Align.CENTER
 
         animatorTransitionYUpSmall = ValueAnimator.ofInt(0, 200)
         animatorTransitionYDownSmall = ValueAnimator.ofInt(0, 200)
@@ -122,7 +120,7 @@ class SortView : View {
         animatorTransitionYUpLarge = ValueAnimator.ofInt(0, 200)
         animatorTransitionXLarge = ValueAnimator()
 
-        animationDuration(DURATION)
+        animationDuration(mDuration)
 
         animatorTransitionYUpSmall!!.interpolator = LinearInterpolator()
         animatorTransitionYDownSmall!!.interpolator = LinearInterpolator()
@@ -136,7 +134,7 @@ class SortView : View {
         pivotPointView = PivotPointView()
 
         animationPivotQuickSort = ValueAnimator.ofInt(0, 100)
-        animationPivotQuickSort!!.duration = 200
+        animationPivotQuickSort!!.duration = 500
 
         updateAnimationListener()
         animationListener()
@@ -146,6 +144,7 @@ class SortView : View {
     public override fun onSaveInstanceState(): Parcelable? {
         //begin boilerplate code that allows parent classes to save state
         val superState = super.onSaveInstanceState()
+        Log.d(TAG,"onSaveInstanceState")
 
         val ss = SavedState(superState)
         //end
@@ -170,6 +169,8 @@ class SortView : View {
             return
         }
 
+        Log.d(TAG,"onRestoreInstanceState")
+
         super.onRestoreInstanceState(state.superState)
         //end
 
@@ -181,7 +182,7 @@ class SortView : View {
         this.isStartAnimation = state.isStartAnimation
         this.insertionWhile = state.insertionWhile
         this.insertionSwap = state.insertionNotSwap
-        this.mListSortValue = state.sortValues
+        this.mListSortValue = state.sortValues!!
     }
 
     private fun noDuration() {
@@ -198,9 +199,12 @@ class SortView : View {
         animatorTransitionYDownSmall!!.duration = duration.toLong()
         animatorTransitionYDownLarge!!.duration = duration.toLong()
         animatorTransitionYUpLarge!!.duration = duration.toLong()
+        animatorTransitionXSmall!!.duration = duration.toLong()
+        animatorTransitionXLarge!!.duration = duration.toLong()
     }
 
     fun startAnimation() {
+        returnDefault()
         isStartAnimation = true
         updateAnimation()
         if (sortViewListener != null)
@@ -209,6 +213,7 @@ class SortView : View {
 
     private fun updateAnimation() {
         invalidate()
+        animationDuration(mDuration)
         when (sortType) {
             SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT -> {
                 animatorTransitionYUpSmall!!.start()
@@ -218,7 +223,6 @@ class SortView : View {
             SortType.QUICKSORT ->
                 // TODO: 4/22/2017
                 if (!isAnimation && !isFindPivot && !isPartition) {
-                    animationDuration(DURATION)
                     animationPivotQuickSort!!.start()
                 } else {
                     animatorTransitionYUpSmall!!.start()
@@ -227,26 +231,25 @@ class SortView : View {
         }
     }
 
-    fun returnDefault() {
-
+    private fun returnDefault() {
         if (mValues != null) {
-            for (i in mListSortValue!!.indices) {
-                val sortValue = mListSortValue!![i]
+            for (i in mListSortValue.indices) {
+                val sortValue = mListSortValue[i]
                 sortValue.isSort = false
                 sortValue.value = mValues!![i]
             }
         }
-        animationDuration(DURATION)
+        animationDuration(mDuration)
         isStartAnimation = false
         insertionsortTemp = 1
         begin = 0
         when (sortType) {
-            SortType.SELECTIONSORT, SortType.INSERTIONSORTI -> temp = 0
-            SortType.BUBBLESORT -> temp = mListSortValue!!.size - 1
+            SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.INSERTIONSORTII -> temp = 0
+            SortType.BUBBLESORT -> temp = mListSortValue.size - 1
             SortType.QUICKSORT -> stackQuickRange!!.push(
                 QuickRange(
                     0,
-                    mListSortValue!!.size - 1
+                    mListSortValue.size - 1
                 )
             )
         }
@@ -283,20 +286,20 @@ class SortView : View {
             animatorTransitionXLarge!!.resume()
     }
 
-    fun cancelAnimation() {
-        if (animatorTransitionYUpSmall!!.isRunning || animatorTransitionYUpSmall!!.isPaused)
-            animatorTransitionYUpSmall!!.cancel()
-        if (animatorTransitionYDownSmall!!.isRunning || animatorTransitionYDownSmall!!.isPaused)
-            animatorTransitionYDownSmall!!.cancel()
-        if (animatorTransitionXSmall!!.isRunning || animatorTransitionXSmall!!.isPaused)
-            animatorTransitionXSmall!!.cancel()
-        if (animatorTransitionYDownLarge!!.isRunning || animatorTransitionYDownLarge!!.isPaused)
-            animatorTransitionYDownLarge!!.cancel()
-        if (animatorTransitionYUpLarge!!.isRunning || animatorTransitionYUpLarge!!.isPaused)
-            animatorTransitionYUpLarge!!.cancel()
-        if (animatorTransitionXLarge!!.isRunning || animatorTransitionXLarge!!.isPaused)
-            animatorTransitionXLarge!!.cancel()
-    }
+//    private fun cancelAnimation() {
+//        if (animatorTransitionYUpSmall!!.isRunning || animatorTransitionYUpSmall!!.isPaused)
+//            animatorTransitionYUpSmall!!.cancel()
+//        if (animatorTransitionYDownSmall!!.isRunning || animatorTransitionYDownSmall!!.isPaused)
+//            animatorTransitionYDownSmall!!.cancel()
+//        if (animatorTransitionXSmall!!.isRunning || animatorTransitionXSmall!!.isPaused)
+//            animatorTransitionXSmall!!.cancel()
+//        if (animatorTransitionYDownLarge!!.isRunning || animatorTransitionYDownLarge!!.isPaused)
+//            animatorTransitionYDownLarge!!.cancel()
+//        if (animatorTransitionYUpLarge!!.isRunning || animatorTransitionYUpLarge!!.isPaused)
+//            animatorTransitionYUpLarge!!.cancel()
+//        if (animatorTransitionXLarge!!.isRunning || animatorTransitionXLarge!!.isPaused)
+//            animatorTransitionXLarge!!.cancel()
+//    }
 
     fun setTypeSort(typeSort: SortType) {
         this.sortType = typeSort
@@ -320,14 +323,14 @@ class SortView : View {
                                     + "rectTempSmall.left : " + rectTempSmall!!.left + " | "
                                     + "rectTempSmall.right : " + rectTempSmall!!.right + ") "
                         )
-                        mListSortValue!![temp].rect!!.top = rectTempSmall!!.top - value
-                        mListSortValue!![temp].rect!!.bottom = rectTempSmall!!.bottom - value
+                        mListSortValue[temp].rect!!.top = rectTempSmall!!.top - value
+                        mListSortValue[temp].rect!!.bottom = rectTempSmall!!.bottom - value
                         Log.d(
                             TAG, "mListSortValue.get(temp).getRect : (temp = " + temp + ")" + "\n"
-                                    + "rect.top : " + mListSortValue!![temp].rect!!.top + " | "
-                                    + "rect.bottom : " + mListSortValue!![temp].rect!!.bottom + " | "
-                                    + "rect.left :" + mListSortValue!![temp].rect!!.left + " | "
-                                    + "rect.right : " + mListSortValue!![temp].rect!!.right
+                                    + "rect.top : " + mListSortValue[temp].rect!!.top + " | "
+                                    + "rect.bottom : " + mListSortValue[temp].rect!!.bottom + " | "
+                                    + "rect.left :" + mListSortValue[temp].rect!!.left + " | "
+                                    + "rect.right : " + mListSortValue[temp].rect!!.right
                         )
 
                         invalidate()
@@ -336,8 +339,8 @@ class SortView : View {
                     }
                 }
                 SortType.INSERTIONSORTII -> if (rectTempSmall != null) {
-                    mListSortValue!![insertionsortTemp].rect!!.top = rectTempSmall!!.top - value
-                    mListSortValue!![insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom - value
+                    mListSortValue[insertionsortTemp].rect!!.top = rectTempSmall!!.top - value
+                    mListSortValue[insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom - value
                     invalidate()
                 } else {
                     Log.d(TAG, "rectTempSmall null")
@@ -350,13 +353,13 @@ class SortView : View {
             if (rectTempSmall != null) {
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
-                        mListSortValue!![temp].rect!!.top = rectTempSmall!!.top + value
-                        mListSortValue!![temp].rect!!.bottom = rectTempSmall!!.bottom + value
+                        mListSortValue[temp].rect!!.top = rectTempSmall!!.top + value
+                        mListSortValue[temp].rect!!.bottom = rectTempSmall!!.bottom + value
                         invalidate()
                     }
                     SortType.INSERTIONSORTII -> {
-                        mListSortValue!![insertionsortTemp].rect!!.top = rectTempSmall!!.top + value
-                        mListSortValue!![insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom + value
+                        mListSortValue[insertionsortTemp].rect!!.top = rectTempSmall!!.top + value
+                        mListSortValue[insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom + value
                         invalidate()
                     }
                 }
@@ -368,13 +371,13 @@ class SortView : View {
             if (rectTempSmall != null) {
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
-                        mListSortValue!![temp].rect!!.left = rectTempSmall!!.left - value
-                        mListSortValue!![temp].rect!!.right = rectTempSmall!!.right - value
+                        mListSortValue[temp].rect!!.left = rectTempSmall!!.left - value
+                        mListSortValue[temp].rect!!.right = rectTempSmall!!.right - value
                         invalidate()
                     }
                     SortType.INSERTIONSORTII -> {
-                        mListSortValue!![insertionsortTemp].rect!!.left = rectTempSmall!!.left - value
-                        mListSortValue!![insertionsortTemp].rect!!.right = rectTempSmall!!.right - value
+                        mListSortValue[insertionsortTemp].rect!!.left = rectTempSmall!!.left - value
+                        mListSortValue[insertionsortTemp].rect!!.right = rectTempSmall!!.right - value
                         invalidate()
                     }
                 }
@@ -384,8 +387,8 @@ class SortView : View {
         animatorTransitionYDownLarge!!.addUpdateListener { animation ->
             if (rectTempLarge != null) {
                 val value = animation.animatedValue as Int
-                mListSortValue!![begin].rect!!.top = rectTempLarge!!.top + value
-                mListSortValue!![begin].rect!!.bottom = rectTempLarge!!.bottom + value
+                mListSortValue[begin].rect!!.top = rectTempLarge!!.top + value
+                mListSortValue[begin].rect!!.bottom = rectTempLarge!!.bottom + value
                 invalidate()
             }
         }
@@ -401,20 +404,20 @@ class SortView : View {
                                 + "rectTempLarge.left : " + rectTempLarge!!.left + " | "
                                 + "rectTempLarge.right : " + rectTempLarge!!.right + ") "
                     )
-                    mListSortValue!![begin].rect!!.left = rectTempLarge!!.left + value
-                    mListSortValue!![begin].rect!!.right = rectTempLarge!!.right + value
+                    mListSortValue[begin].rect!!.left = rectTempLarge!!.left + value
+                    mListSortValue[begin].rect!!.right = rectTempLarge!!.right + value
                     Log.d(
                         TAG, "mListSortValue.get(begin).getRect : (begin = " + begin + ")" + "\n"
-                                + "rect.top : " + mListSortValue!![begin].rect!!.top + " | "
-                                + "rect.bottom : " + mListSortValue!![begin].rect!!.bottom + " | "
-                                + "rect.left :" + mListSortValue!![begin].rect!!.left + " | "
-                                + "rect.right : " + mListSortValue!![begin].rect!!.right
+                                + "rect.top : " + mListSortValue[begin].rect!!.top + " | "
+                                + "rect.bottom : " + mListSortValue[begin].rect!!.bottom + " | "
+                                + "rect.left :" + mListSortValue[begin].rect!!.left + " | "
+                                + "rect.right : " + mListSortValue[begin].rect!!.right
                     )
                     invalidate()
                 }
                 SortType.INSERTIONSORTII -> if (valueTemp != -1) {
                     for (i in temp until insertionsortTemp) {
-                        val rect = mListSortValue!![i].rect
+                        val rect = mListSortValue[i].rect
                         rect!!.set(rect.left - valueTemp + value, rect.top, rect.right - valueTemp + value, rect.bottom)
                     }
                     valueTemp = value
@@ -426,8 +429,8 @@ class SortView : View {
         animatorTransitionYUpLarge!!.addUpdateListener { animation ->
             if (rectTempLarge != null) {
                 val value = animation.animatedValue as Int
-                mListSortValue!![begin].rect!!.top = rectTempLarge!!.top - value
-                mListSortValue!![begin].rect!!.bottom = rectTempLarge!!.bottom - value
+                mListSortValue[begin].rect!!.top = rectTempLarge!!.top - value
+                mListSortValue[begin].rect!!.bottom = rectTempLarge!!.bottom - value
                 invalidate()
             }
         }
@@ -445,25 +448,25 @@ class SortView : View {
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
                         if (rectTempSmall != null) {
-                            rectTempSmall!!.set(mListSortValue!![temp].rect!!)
+                            rectTempSmall!!.set(mListSortValue[temp].rect!!)
                         }
                         mDistance =
-                            Math.abs(mListSortValue!![temp].rect!!.centerX() - mListSortValue!![begin].rect!!.centerX())
+                            Math.abs(mListSortValue[temp].rect!!.centerX() - mListSortValue[begin].rect!!.centerX())
                         Log.d(TAG, "distance : $mDistance")
                         animatorTransitionXSmall!!.setIntValues(0, mDistance)
                         if (insertionSwap)
-                            animatorTransitionXSmall!!.duration = DURATION.toLong()
+                            animatorTransitionXSmall!!.duration = mDuration.toLong()
                         animatorTransitionXSmall!!.start()
                     }
                     SortType.INSERTIONSORTII -> {
                         if (rectTempSmall != null) {
-                            rectTempSmall!!.set(mListSortValue!![insertionsortTemp].rect!!)
+                            rectTempSmall!!.set(mListSortValue[insertionsortTemp].rect!!)
                         }
                         mDistance =
-                            Math.abs(mListSortValue!![insertionsortTemp].rect!!.left - mListSortValue!![insertionsortTemp].rect!!.right)
+                            Math.abs(mListSortValue[insertionsortTemp].rect!!.left - mListSortValue[insertionsortTemp].rect!!.right)
                         animatorTransitionXLarge!!.setIntValues(0, mDistance)
                         if (valueTemp != -1) {
-                            animatorTransitionXLarge!!.duration = DURATION.toLong()
+                            animatorTransitionXLarge!!.duration = mDuration.toLong()
                         }
                         animatorTransitionXLarge!!.start()
                     }
@@ -488,13 +491,13 @@ class SortView : View {
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
                         if (rectTempSmall != null) {
-                            rectTempSmall!!.set(mListSortValue!![temp].rect!!)
+                            rectTempSmall!!.set(mListSortValue[temp].rect!!)
                         }
                         animatorTransitionYDownSmall!!.start()
                     }
                     SortType.INSERTIONSORTII -> {
                         if (rectTempSmall != null) {
-                            rectTempSmall!!.set(mListSortValue!![insertionsortTemp].rect!!)
+                            rectTempSmall!!.set(mListSortValue[insertionsortTemp].rect!!)
                         }
                         animatorTransitionYDownSmall!!.start()
                     }
@@ -522,14 +525,14 @@ class SortView : View {
                     SortType.INSERTIONSORTII -> {
                         rectTempSmall = null
                         isAnimation = false
-                        mListSortValue!![insertionsortTemp].isSort = true
+                        mListSortValue[insertionsortTemp].isSort = true
                         if (valueTemp != -1) {
                             for (i in insertionsortTemp downTo temp + 1) {
                                 swap(i, i - 1)
                             }
                         }
                         insertionsortTemp++
-                        if (insertionsortTemp < mListSortValue!!.size) {
+                        if (insertionsortTemp < mListSortValue.size) {
                             updateAnimation()
                         } else {
                             isStartAnimation = false
@@ -561,12 +564,12 @@ class SortView : View {
 
             override fun onAnimationEnd(animation: Animator) {
                 if (rectTempLarge != null) {
-                    rectTempLarge!!.set(mListSortValue!![begin].rect!!)
+                    rectTempLarge!!.set(mListSortValue[begin].rect!!)
                 }
 
                 animatorTransitionXLarge!!.setIntValues(0, mDistance)
                 if (insertionSwap)
-                    animatorTransitionXLarge!!.duration = DURATION.toLong()
+                    animatorTransitionXLarge!!.duration = mDuration.toLong()
                 animatorTransitionXLarge!!.start()
             }
 
@@ -588,18 +591,18 @@ class SortView : View {
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
                         if (rectTempLarge != null) {
-                            rectTempLarge!!.set(mListSortValue!![begin].rect!!)
+                            rectTempLarge!!.set(mListSortValue[begin].rect!!)
                         }
                         animatorTransitionYUpLarge!!.start()
                     }
                     SortType.INSERTIONSORTII -> {
                         mDistance =
-                            Math.abs(mListSortValue!![insertionsortTemp].rect!!.centerX() - mListSortValue!![temp].rect!!.centerX()) + Math.abs(
-                                mListSortValue!![temp].rect!!.right - mListSortValue!![temp].rect!!.left
+                            Math.abs(mListSortValue[insertionsortTemp].rect!!.centerX() - mListSortValue[temp].rect!!.centerX()) + Math.abs(
+                                mListSortValue[temp].rect!!.right - mListSortValue[temp].rect!!.left
                             )
                         animatorTransitionXSmall!!.setIntValues(0, mDistance)
                         if (valueTemp != -1) {
-                            animatorTransitionXSmall!!.duration = DURATION.toLong()
+                            animatorTransitionXSmall!!.duration = mDuration.toLong()
                         }
                         animatorTransitionXSmall!!.start()
                     }
@@ -627,7 +630,7 @@ class SortView : View {
                         isAnimation = false
                         swap(temp, begin)
                         begin++
-                        if (begin < mListSortValue!!.size) {
+                        if (begin < mListSortValue.size) {
                             updateAnimation()
                         } else {
                             isStartAnimation = false
@@ -644,9 +647,9 @@ class SortView : View {
                         if (insertionSwap)
                             swap(begin, temp)
                         else
-                            mListSortValue!![temp].isSort = true
+                            mListSortValue[temp].isSort = true
                         temp--
-                        if (insertionsortTemp < mListSortValue!!.size) {
+                        if (insertionsortTemp < mListSortValue.size) {
                             updateAnimation()
                         } else {
                             isStartAnimation = false
@@ -664,13 +667,13 @@ class SortView : View {
                         if (bubbleSwap)
                             swap(begin, temp)
                         temp--
-                        if (bubblesortTemp < mListSortValue!!.size) {
+                        if (bubblesortTemp < mListSortValue.size) {
                             updateAnimation()
                         } else {
                             isStartAnimation = false
                             bubblesortTemp = 0
                             begin = 0
-                            temp = mListSortValue!!.size - 1
+                            temp = mListSortValue.size - 1
                             invalidate()
                             if (sortViewListener != null)
                                 sortViewListener!!.completeAnimation()
@@ -697,6 +700,7 @@ class SortView : View {
                         }
                         updateAnimation()
                     }
+                    SortType.INSERTIONSORTII -> {}
                 }
             }
 
@@ -731,17 +735,20 @@ class SortView : View {
     }
 
     fun swap(a: Int, b: Int) {
-        Collections.swap(mListSortValue!!, a, b)
+        Collections.swap(mListSortValue, a, b)
         when (sortType) {
-            SortType.SELECTIONSORT -> mListSortValue!![b].isSort = true
-            SortType.INSERTIONSORTI -> mListSortValue!![a].isSort = true
-            SortType.BUBBLESORT -> {
-            }
+            SortType.SELECTIONSORT -> mListSortValue[b].isSort = true
+            SortType.INSERTIONSORTI -> mListSortValue[a].isSort = true
+            SortType.INSERTIONSORTII ,
+            SortType.BUBBLESORT ,
+            SortType.QUICKSORT -> {}
         }
     }
 
     fun setListValue(values: IntArray) {
+        Log.d(TAG,"setListValue")
         mValues = values
+        returnDefault()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -749,22 +756,26 @@ class SortView : View {
         val width = w - (paddingLeft + paddingRight)
         val height = h - (paddingTop + paddingBottom)
 
+        Log.d(TAG,"onSizeChanged")
+
+        mListSortValue.clear()
+
         if (mValues != null) {
             val rectSize = width / mValues!!.size
             var xLeft = left + paddingLeft
             var xRight = xLeft + rectSize
             val yTop = height / 2 - 50
             val yBottom = height / 2 + 50
-            if (mListSortValue!!.size == 0) {
+            if (mListSortValue.size == 0) {
                 for (value in mValues!!) {
-                    mListSortValue!!.add(
+                    mListSortValue.add(
                         SortValue(
                             Rect(xLeft, yTop, xRight, yBottom),
                             value
                         )
                     )
                     xLeft = xRight
-                    xRight = xRight + rectSize
+                    xRight += rectSize
                 }
             } /*else {
 //                for (SortValue sortValue : mListSortValue) {
@@ -782,18 +793,18 @@ class SortView : View {
         super.onDraw(canvas)
 
         if (isStartAnimation) {
-            for (i in mListSortValue!!.indices) {
-                val sortValue = mListSortValue!![i]
+            for (i in mListSortValue.indices) {
+                val sortValue = mListSortValue[i]
                 when (sortType) {
                     SortType.SELECTIONSORT -> selectionSort(i, sortValue, canvas)
                     SortType.INSERTIONSORTI -> if (i == 0) {
-                        mListSortValue!![0].isSort = true
+//                        mListSortValue[0].isSort = true
                         draw(sortValue, canvas)
                     } else {
                         insertionSortI(i, sortValue, canvas)
                     }
                     SortType.INSERTIONSORTII -> if (i == 0) {
-                        mListSortValue!![0].isSort = true
+//                        mListSortValue[0].isSort = true
                         draw(sortValue, canvas)
                     } else {
                         insertionSortII(i, sortValue, canvas)
@@ -817,15 +828,15 @@ class SortView : View {
                 }
             }
         } else {
-            for (i in mListSortValue!!.indices) {
-                val sortValue = mListSortValue!![i]
+            for (i in mListSortValue.indices) {
+                val sortValue = mListSortValue[i]
                 draw(sortValue, canvas)
             }
         }
     }
 
     private fun draw(sortValue: SortValue, canvas: Canvas) {
-        val text = "" + sortValue.value
+        val text = sortValue.value.toString()
         val bound = Rect()
         mPaintTextNoSort.getTextBounds(text, 0, text.length, bound)
         val textHeight = bound.height()
@@ -842,8 +853,8 @@ class SortView : View {
         if (i == begin || i == temp) {
             if (!isAnimation) {
                 temp = begin
-                for (j in i + 1 until mListSortValue!!.size) {
-                    if (mListSortValue!![temp].value > mListSortValue!![j].value) {
+                for (j in i + 1 until mListSortValue.size) {
+                    if (mListSortValue[temp].value > mListSortValue[j].value) {
                         temp = j
                     }
                 }
@@ -852,8 +863,8 @@ class SortView : View {
                     rectTempLarge = null
                     noDuration()
                 } else {
-                    rectTempSmall = Rect(mListSortValue!![temp].rect)
-                    rectTempLarge = Rect(mListSortValue!![begin].rect)
+                    rectTempSmall = Rect(mListSortValue[temp].rect)
+                    rectTempLarge = Rect(mListSortValue[begin].rect)
                 }
                 draw(sortValue, canvas)
                 isAnimation = true
@@ -872,10 +883,10 @@ class SortView : View {
                 if (insertionWhile) {
                     temp = insertionsortTemp
                 }
-                while (temp > 0 && mListSortValue!![temp].value < mListSortValue!![temp - 1].value) {
+                while (temp > 0 && mListSortValue[temp].value < mListSortValue[temp - 1].value) {
                     begin = temp - 1
-                    rectTempSmall = Rect(mListSortValue!![temp].rect)
-                    rectTempLarge = Rect(mListSortValue!![begin].rect)
+                    rectTempSmall = Rect(mListSortValue[temp].rect)
+                    rectTempLarge = Rect(mListSortValue[begin].rect)
                     insertionSwap = true
                     break
                 }
@@ -884,8 +895,6 @@ class SortView : View {
                     if (rectTempSmall == null && rectTempLarge == null) {
                         insertionSwap = false
                         noDuration()
-                    } else {
-                        animationDuration(DURATION)
                     }
                     insertionWhile = false
                 } else {
@@ -906,9 +915,9 @@ class SortView : View {
         if (i == insertionsortTemp) {
             if (!isAnimation) {
                 temp = insertionsortTemp
-                while (temp > 0 && mListSortValue!![temp].value < mListSortValue!![temp - 1].value) {
+                while (temp > 0 && mListSortValue[temp].value < mListSortValue[temp - 1].value) {
                     swap(temp, temp - 1)
-                    temp = temp - 1
+                    temp -= 1
                 }
 
                 if (temp == insertionsortTemp) {
@@ -919,9 +928,8 @@ class SortView : View {
                     for (j in temp until insertionsortTemp) {
                         swap(j, j + 1)
                     }
-                    rectTempSmall = Rect(mListSortValue!![insertionsortTemp].rect)
+                    rectTempSmall = Rect(mListSortValue[insertionsortTemp].rect)
                     valueTemp = 0
-                    animationDuration(DURATION)
                 }
                 isAnimation = true
                 draw(sortValue, canvas)
@@ -936,14 +944,14 @@ class SortView : View {
     private fun bubbleSort(i: Int, sortValue: SortValue, canvas: Canvas) {
         if (bubblesortTemp == i) {
             if (!isAnimation) {
-                for (j in mListSortValue!!.size - 1 downTo i + 1) {
+                for (j in mListSortValue.size - 1 downTo i + 1) {
                     if (j > temp)
                         continue
-                    if (mListSortValue!![j].value < mListSortValue!![j - 1].value) {
+                    if (mListSortValue[j].value < mListSortValue[j - 1].value) {
                         temp = j
                         begin = j - 1
-                        rectTempSmall = Rect(mListSortValue!![temp].rect)
-                        rectTempLarge = Rect(mListSortValue!![begin].rect)
+                        rectTempSmall = Rect(mListSortValue[temp].rect)
+                        rectTempLarge = Rect(mListSortValue[begin].rect)
                         bubbleSwap = true
                     }
                     break
@@ -952,17 +960,15 @@ class SortView : View {
                 if (rectTempSmall == null && rectTempLarge == null) {
                     bubbleSwap = false
                     noDuration()
-                } else {
-                    animationDuration(DURATION)
                 }
 
                 isAnimation = true
 
                 if (temp == i) {
-                    temp = mListSortValue!!.size - 1
+                    temp = mListSortValue.size - 1
                     bubbleSwap = false
                     isAnimation = false
-                    mListSortValue!![bubblesortTemp].isSort = true
+                    mListSortValue[bubblesortTemp].isSort = true
                     bubblesortTemp++
                 }
                 draw(sortValue, canvas)
@@ -976,7 +982,7 @@ class SortView : View {
 
     private fun quickSort(i: Int, j: Int, sortValue: SortValue, canvas: Canvas) {
         if (!isFindPivot) {
-            pivot = findPivot(mListSortValue!!, i, j)
+            pivot = findPivot(mListSortValue, i, j)
             isFindPivot = true
             draw(sortValue, canvas)
         } else {
@@ -994,16 +1000,16 @@ class SortView : View {
                         "Pivot",
                         pivotPointView!!.pointText!!.x.toFloat(),
                         pivotPointView!!.pointText!!.y.toFloat(),
-                        mPaintTextSort!!
+                        mPaintTextSort
                     )
                     canvas.drawLine(
                         pivotPointView!!.firstLine!!.x.toFloat(),
                         pivotPointView!!.firstLine!!.y.toFloat(),
                         pivotPointView!!.lastLine!!.x.toFloat(),
                         pivotPointView!!.lastLine!!.y.toFloat(),
-                        mPaintLinePivot!!
+                        mPaintLinePivot
                     )
-                    canvas.drawPath(pivotPointView!!.pathArrow!!, mPaintLinePivot!!)
+                    canvas.drawPath(pivotPointView!!.pathArrow!!, mPaintLinePivot)
                 }
                 draw(sortValue, canvas)
             }
@@ -1012,19 +1018,19 @@ class SortView : View {
 
     private fun findPivot(a: List<SortValue>, i: Int, j: Int): SortValue? {
         var k = i + 1
-        val FirstKey = a[i].value
-        while (k <= j && a[k].value == FirstKey) {
-            k = k + 1
-        }
+        val firstKey = a[i].value
+        while (k <= j && a[k].value == firstKey) k += 1
 
-        if (k > j) {
-            return null
-        } else if (a[k].value > FirstKey) {
-            pivotPointView!!.setPoint(a[k].rect!!.centerX(), a[k].rect!!.bottom + 120)
-            return a[k]
-        } else {
-            pivotPointView!!.setPoint(a[i].rect!!.centerX(), a[i].rect!!.bottom + 120)
-            return a[i]
+        return when {
+            k > j -> null
+            a[k].value > firstKey -> {
+                pivotPointView!!.setPoint(a[k].rect!!.centerX(), a[k].rect!!.bottom + 120)
+                a[k]
+            }
+            else -> {
+                pivotPointView!!.setPoint(a[i].rect!!.centerX(), a[i].rect!!.bottom + 120)
+                a[i]
+            }
         }
     }
 
@@ -1034,24 +1040,24 @@ class SortView : View {
             temp = j
             isPartitionAnimation = true
         } else {
-            temp = R
-            begin = L
+            temp = mRight
+            begin = mLeft
         }
         while (begin < temp) {
             while (a!![begin].value < pivot!!.value) {
-                begin = begin + 1
+                begin += 1
             }
 
             while (a[temp].value >= pivot.value) {
-                temp = temp - 1
+                temp -= 1
             }
 
             if (begin < temp) {
-                // TODO: 4/21/2017 swap(L,R)
-                L = begin
-                R = temp
-                rectTempSmall = Rect(mListSortValue!![temp].rect)
-                rectTempLarge = Rect(mListSortValue!![begin].rect)
+                // TODO: 4/21/2017 swap(mLeft,mRight)
+                mLeft = begin
+                mRight = temp
+                rectTempSmall = Rect(mListSortValue[temp].rect)
+                rectTempLarge = Rect(mListSortValue[begin].rect)
             }
             break
         }
@@ -1073,17 +1079,17 @@ class SortView : View {
     private fun isPartition(first: Int, last: Int): Boolean {
 
         if (first == last) {
-            mListSortValue!![first].isSort = true
+            mListSortValue[first].isSort = true
             return true
         }
 
         for (i in first until last + 1) {
-            if (mListSortValue!![first].value != mListSortValue!![i].value) {
+            if (mListSortValue[first].value != mListSortValue[i].value) {
                 return false
             }
         }
         for (i in first until last + 1) {
-            mListSortValue!![i].isSort = true
+            mListSortValue[i].isSort = true
         }
         return true
     }

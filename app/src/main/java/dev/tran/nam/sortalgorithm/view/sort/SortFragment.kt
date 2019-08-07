@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import dev.tran.nam.sort.algorithm.R
-import dev.tran.nam.sortalgorithm.view.main.ICarousel.Companion.MAX_ELEVATION_FACTOR
 import dev.tran.nam.sortalgorithm.widget.SortType
 import tran.nam.Logger
 import tran.nam.core.view.BaseFragment
@@ -21,7 +20,6 @@ class SortFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mCardView = view.findViewById(R.id.cardContain)
-        mCardView.maxCardElevation = mCardView.cardElevation * MAX_ELEVATION_FACTOR
         val tvSortType = view.findViewById<TextView>(R.id.tvSortType)
         arguments?.run {
             val type = this.getInt("SortType")

@@ -37,12 +37,12 @@ class SplashFragment : BaseFragment(){
         super.onActivityCreated(savedInstanceState)
 
         handler = Handler()
-        handler?.postDelayed(runnable, 2000)
+        handler?.postDelayed(runnable!!, 2000)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        handler?.removeCallbacks(runnable)
+        handler?.removeCallbacks(runnable!!)
         handler = null
         runnable = null
     }

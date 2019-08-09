@@ -18,6 +18,13 @@
     <fragment android:id="@+id/mainFragment"
               android:name="dev.tran.nam.sortalgorithm.view.main.MainFragment"
               android:label="MainFragment"
-              tools:layout="@layout/fragment_main"/>
+              tools:layout="@layout/fragment_main">
+        <action android:id="@+id/action_mainFragment_to_sortFragment" app:destination="@id/sortFragment"/>
+    </fragment>
+
+    <fragment android:id="@+id/sortFragment"
+              android:name="dev.tran.nam.sortalgorithm.view.sort.SortFragment"
+              android:label="SortFragment"
+              tools:layout="@layout/fragment_sort"/>
 
 </navigation>

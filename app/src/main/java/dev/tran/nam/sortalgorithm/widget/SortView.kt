@@ -22,7 +22,7 @@ import java.util.*
 class SortView : View {
 
     private var mListSortValue: ArrayList<SortValue> = ArrayList()
-    private var mValues: IntArray? = null
+    private var mValues: Array<Int>? = null
     private lateinit var mPaintRectNotSort: Paint
     private lateinit var mPaintRectSorted: Paint
     private lateinit var mPaintLinePivot: Paint
@@ -745,7 +745,7 @@ class SortView : View {
         }
     }
 
-    fun setListValue(values: IntArray) {
+    fun setListValue(values: Array<Int>) {
         Log.d(TAG,"setListValue")
         mValues = values
         returnDefault()

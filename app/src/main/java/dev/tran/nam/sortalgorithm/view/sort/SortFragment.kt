@@ -2,11 +2,10 @@ package dev.tran.nam.sortalgorithm.view.sort
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.cardview.widget.CardView
 import dev.tran.nam.sort.algorithm.R
 import dev.tran.nam.sortalgorithm.widget.SortType
-import tran.nam.Logger
+import kotlinx.android.synthetic.main.fragment_sort.*
 import tran.nam.core.view.BaseFragment
 
 class SortFragment : BaseFragment() {
@@ -19,25 +18,28 @@ class SortFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mCardView = view.findViewById(R.id.cardContain)
-        val tvSortType = view.findViewById<TextView>(R.id.tvSortType)
         arguments?.run {
-            val type = this.getInt("SortType")
-            Logger.debug(type)
-            when(type){
+            val type = when(getInt("type",SortType.SELECTIONSORT.value)){
                 SortType.SELECTIONSORT.value -> {
-                    tvSortType.text = "SELECTIONSORT"
+                    SortType.SELECTIONSORT
                 }
                 SortType.INSERTIONSORTI.value -> {
-                    tvSortType.text = "INSERTIONSORTI"
+                    SortType.INSERTIONSORTI
                 }
                 SortType.BUBBLESORT.value -> {
-                    tvSortType.text = "BUBBLESORT"
+                    SortType.BUBBLESORT
                 }
                 SortType.QUICKSORT.value -> {
-                    tvSortType.text = "QUICKSORT"
+                    SortType.QUICKSORT
+                }
+                else -> {
+                    SortType.SELECTIONSORT
                 }
             }
+            sortExample.setTypeSort(type)
+
         }
+        sortExample.setListValue(arrayOf(15,8,5,12,56))
+        sortExample.startAnimation()
     }
 }

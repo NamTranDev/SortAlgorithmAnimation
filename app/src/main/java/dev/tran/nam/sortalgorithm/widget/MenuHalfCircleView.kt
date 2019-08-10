@@ -5,6 +5,8 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.os.Parcelable
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -20,14 +22,17 @@ class MenuHalfCircleView : View {
 
     private lateinit var mPaintOval: Paint
     private lateinit var mPaintPoint: Paint
+    private lateinit var mPaintText: TextPaint
     private lateinit var mRectOval: RectF
-    private var mMenuIcons = mutableListOf<Int>()
+    private val mDistanceTextToIcon = 0F
+    private var mMenuItems = mutableListOf<MenuItem>()
     private var mMenuSize = 0
-    private val mDistanceHalfHeight = 50F
+    private val mDistanceHalfHeight = 100F
     private var mSweepAngle = 0F
     private var mSweepAngleChild = 0F
+    private var mPositionCharAt = 0
     private var mAngleCirleMain = 180F
-    private val mListMenu = ArrayList<MenuCircle>()
+    private var mListMenu = ArrayList<MenuCircle>()
     private var mCenterCircleMain = PointF()
     private var mRadiusCircleMain = 0.0F
     private var mRadiusCircleChild = 100F
@@ -39,6 +44,7 @@ class MenuHalfCircleView : View {
     private var mAngleDistanceCircleChild = 0F
     private lateinit var mAnimatorDrawCircleMain: ValueAnimator
     private lateinit var mAnimatorDrawCircleChild: ValueAnimator
+    private lateinit var mAnimatorText: ValueAnimator
     var iMenuListener: IMenuListener? = null
 
 //    private var isDrawMenu = false
@@ -51,7 +57,7 @@ class MenuHalfCircleView : View {
         init(context, attrs)
     }
 
-    fun init(context: Context, attrs: AttributeSet? = null) {
+    private fun init(context: Context, attrs: AttributeSet? = null) {
 
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.MenuHalfCircleView)
         typeArray.recycle()
@@ -68,6 +74,15 @@ class MenuHalfCircleView : View {
         mPaintPoint = Paint()
         mPaintPoint.isAntiAlias = true
         mPaintPoint.isFilterBitmap = true
+
+        mPaintText = TextPaint()
+        mPaintText.isAntiAlias = true
+        mPaintText.isDither = true
+        mPaintText.color = Color.BLACK
+        mPaintText.strokeWidth = 15f
+        mPaintText.textSize = 45f
+        mPaintText.strokeJoin = Paint.Join.ROUND
+        mPaintText.strokeCap = Paint.Cap.ROUND
 
         mAnimatorDrawCircleMain = ValueAnimator.ofFloat(0F, mAngleCirleMain)
         mAnimatorDrawCircleMain.duration = mDuration
@@ -86,6 +101,9 @@ class MenuHalfCircleView : View {
                     val menu = mListMenu[mPositionCirCleChild - 1]
                     menu.isDrawing = true
                     mSweepAngleChild = 0F
+                    mPositionCharAt = 0
+                    mAnimatorText.setIntValues(0, menu.mText.length)
+                    mAnimatorText.start()
                     mAnimatorDrawCircleChild.start()
                 } else {
                     iMenuListener?.OnMenuCompleteAnimation()
@@ -147,14 +165,22 @@ class MenuHalfCircleView : View {
 //                mAnimatorDrawCircleMain.start()
             }
         })
+
+        mAnimatorText = ValueAnimator.ofInt()
+        mAnimatorText.duration = mDuration
+        mAnimatorText.repeatCount = ValueAnimator.INFINITE
+        mAnimatorText.addUpdateListener { animation ->
+            mPositionCharAt = animation.animatedValue as Int
+            invalidate()
+        }
     }
 
-    fun initIcons(icons: Array<Int>, isComplete: Boolean = false) {
-        mMenuIcons.addAll(icons)
-        mMenuSize = mMenuIcons.size + 1
+    fun initIcons(icons: Array<MenuItem>) {
+        mMenuItems.addAll(icons)
+        mMenuSize = mMenuItems.size + 1
         mAngleCirleMain /= mMenuSize
 
-        val pointIntersection = createMenuItem(0, mAngleCirleMain - 90, isComplete)
+        val pointIntersection = createMenuItem(mMenuItems[0], mAngleCirleMain - 90)
 
         mAngleDistanceCircleChild = 180 - findAngle(mCenterCircleMain, pointIntersection)
         mAngleDistanceCircleChild = mAngleCirleMain - mAngleDistanceCircleChild
@@ -164,24 +190,47 @@ class MenuHalfCircleView : View {
         mAnimatorDrawCircleMain.setFloatValues(0F, mAngleCirleMain/* - mAngleDistanceCircleChild*/)
 
         for (i in 2 until mMenuSize) {
-            createMenuItem(i - 1, mAngleCirleMain * i - 90, isComplete)
+            createMenuItem(mMenuItems[i - 1], mAngleCirleMain * i - 90)
         }
 
         Logger.debug(mListMenu)
 
-        if(isComplete){
-            mSweepAngle = 180F
-            mSweepAngleChild = 360F
-            invalidate()
+        mAnimatorDrawCircleMain.start()
+    }
+
+    public override fun onSaveInstanceState(): Parcelable? {
+        //begin boilerplate code that allows parent classes to save state
+        val superState = super.onSaveInstanceState()
+        Logger.debug("onSaveInstanceState")
+
+        val ss = MenuState(superState)
+        //end
+
+        ss.mListMenuItem = this.mListMenu
+        return ss
+    }
+
+    public override fun onRestoreInstanceState(state: Parcelable) {
+        //begin boilerplate code so parent classes can restore state
+        if (state !is MenuState) {
+            super.onRestoreInstanceState(state)
             return
         }
-        mAnimatorDrawCircleMain.start()
+
+        Logger.debug("onRestoreInstanceState")
+
+        super.onRestoreInstanceState(state.superState)
+        //end
+
+        this.mListMenu = state.mListMenuItem!!
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
         mRadiusCircleMain = h / 2 - mDistanceHalfHeight
+        Logger.debug("Rect : mRadiusCircleMain - $mRadiusCircleMain")
+        Logger.debug("Rect : 0 - h / 2 + mDistanceHalfHeight - ${0 - h / 2 + mDistanceHalfHeight})")
 
         mRectOval.set(
             0 - h / 2 + mDistanceHalfHeight, mDistanceHalfHeight
@@ -191,10 +240,16 @@ class MenuHalfCircleView : View {
         Logger.debug(mRectOval)
         Logger.debug(mRectOval.centerX(), mRectOval.centerY())
         mCenterCircleMain.set(mRectOval.centerX(), mRectOval.centerY())
+
+        if (mListMenu.size > 0) {
+            mSweepAngle = 180F
+            mSweepAngleChild = 360F
+            iMenuListener?.OnMenuCompleteAnimation()
+        }
     }
 
-    private fun createMenuItem(position: Int, angle: Float, isComplete: Boolean = false): PointF {
-        val bmp = BitmapFactory.decodeResource(resources, mMenuIcons[position])
+    private fun createMenuItem(menu: MenuItem, angle: Float): PointF {
+//        val bmp = BitmapFactory.decodeResource(resources, mMenuItems[position])
 //        val shader = BitmapShader(bmp, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
 
         val point = getPosition(
@@ -202,15 +257,26 @@ class MenuHalfCircleView : View {
             , angle
         )
 
+        val rectText = Rect()
+        mPaintText.getTextBounds(menu.text, 0, menu.text.length, rectText)
+
+        val startText = if (point.x > width / 2) {
+            val endText = point.x - mRadiusCircleChild - mDistanceTextToIcon
+            endText - rectText.width()
+        } else {
+            point.x + mRadiusCircleChild + mDistanceTextToIcon
+        }
+        Logger.debug(startText)
+
         val pointIntersection =
             findFirstIntersectionOfTwoCircle(mCenterCircleMain, mRadiusCircleMain, point, mRadiusCircleChild)
-        val startAngle = 85 - findAngle(point, pointIntersection)
+        val startAngle = 88 - findAngle(point, pointIntersection)
         Logger.debug(startAngle)
         val rect = RectF(
             point.x - mRadiusCircleChild, point.y - mRadiusCircleChild
             , point.x + mRadiusCircleChild, point.y + mRadiusCircleChild
         )
-        mListMenu.add(MenuCircle(point, rect, startAngle, null, isDraw = isComplete))
+        mListMenu.add(MenuCircle(point, PointF(startText, point.y + rectText.height() / 2), menu.text, rect, startAngle))
         return pointIntersection
     }
 
@@ -260,12 +326,14 @@ class MenuHalfCircleView : View {
             if (menu.isDraw) {
                 val center = menu.centerPoint
                 canvas?.drawCircle(center.x, center.y, mRadiusCircleChild, mPaintPoint)
+                canvas?.drawText(menu.mText,menu.startTextPoint.x,menu.startTextPoint.y,mPaintText)
         }
             if (menu.isDrawing) {
 //                mPathCircleChild.reset()
 //                mPathCircleChild.arcTo(menu.rectF, menu.startAngle, mSweepAngleChild)
 //                canvas?.drawPath(mPathCircleChild, mPaintPoint)
                 canvas?.drawArc(menu.rectF, menu.startAngle, mSweepAngleChild, true, mPaintPoint)
+                canvas?.drawText(menu.mText.substring(0,mPositionCharAt),menu.startTextPoint.x,menu.startTextPoint.y,mPaintText)
             }
         }
     }
@@ -273,8 +341,8 @@ class MenuHalfCircleView : View {
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event?.run {
-            val touchX = event.getX()
-            val touchY = event.getY()
+            val touchX = event.x
+            val touchY = event.y
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
                     for ((index, menu) in mListMenu.withIndex()) {

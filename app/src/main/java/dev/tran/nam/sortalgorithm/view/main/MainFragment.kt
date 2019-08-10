@@ -6,33 +6,26 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import dev.tran.nam.sort.algorithm.R
 import dev.tran.nam.sortalgorithm.widget.IMenuListener
+import dev.tran.nam.sortalgorithm.widget.MenuItem
 import dev.tran.nam.sortalgorithm.widget.SortType
 import kotlinx.android.synthetic.main.fragment_main.*
+import tran.nam.Logger
 import tran.nam.core.view.BaseFragment
 
 class MainFragment : BaseFragment(), IMenuListener {
-
-    companion object {
-        var isAnimation = false
-    }
 
     override fun layoutId(): Int {
         return R.layout.fragment_main
     }
 
     override fun onInitialized() {
-        initView()
+        Logger.debug("onInitialized")
+        menuView.initIcons(arrayOf(MenuItem("Selection Sort",1),MenuItem("Insertion Sort",1)
+        ,MenuItem("Bubble Sort",1),MenuItem("Quick Sort",1)))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (isAnimation) {
-            initView(true)
-        }
-    }
-
-    fun initView(isComplete: Boolean = false) {
-        menuView.initIcons(arrayOf(1, 2, 3, 4), isComplete)
         menuView.iMenuListener = this
     }
 
@@ -60,6 +53,6 @@ class MainFragment : BaseFragment(), IMenuListener {
     }
 
     override fun OnMenuCompleteAnimation() {
-        isAnimation = true
+
     }
 }

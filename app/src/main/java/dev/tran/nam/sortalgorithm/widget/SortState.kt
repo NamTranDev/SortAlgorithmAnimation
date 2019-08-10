@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
 
-class SavedState : View.BaseSavedState {
+class SortState : View.BaseSavedState {
 
     var begin: Int = 0
     var insertionsortTemp: Int = 0
@@ -49,13 +49,13 @@ class SavedState : View.BaseSavedState {
     }
 
     @JvmField
-    val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+    val CREATOR: Parcelable.Creator<SortState> = object : Parcelable.Creator<SortState> {
 
-        override fun createFromParcel(source: Parcel): SavedState {
-            return SavedState(source)
+        override fun createFromParcel(source: Parcel): SortState {
+            return SortState(source)
         }
 
-        override fun newArray(size: Int): Array<SavedState?> {
+        override fun newArray(size: Int): Array<SortState?> {
             return arrayOfNulls(size)
         }
     }

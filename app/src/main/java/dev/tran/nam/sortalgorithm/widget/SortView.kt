@@ -10,9 +10,9 @@ import android.graphics.Rect
 import android.os.Parcelable
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
+import tran.nam.Logger
 import java.util.*
 
 /**
@@ -64,6 +64,7 @@ class SortView : View {
     private var partition: Int = 0
     private var mLeft: Int = 0
     private var mRight: Int = 0
+    private var isRelease = false
 
     //QuickSort
     private var stackQuickRange: Stack<QuickRange>? = null
@@ -144,9 +145,9 @@ class SortView : View {
     public override fun onSaveInstanceState(): Parcelable? {
         //begin boilerplate code that allows parent classes to save state
         val superState = super.onSaveInstanceState()
-        Log.d(TAG,"onSaveInstanceState")
+        Logger.debug(TAG, "onSaveInstanceState")
 
-        val ss = SavedState(superState)
+        val ss = SortState(superState)
         //end
 
         ss.begin = this.begin
@@ -164,12 +165,12 @@ class SortView : View {
 
     public override fun onRestoreInstanceState(state: Parcelable) {
         //begin boilerplate code so parent classes can restore state
-        if (state !is SavedState) {
+        if (state !is SortState) {
             super.onRestoreInstanceState(state)
             return
         }
 
-        Log.d(TAG,"onRestoreInstanceState")
+        Logger.debug("onRestoreInstanceState")
 
         super.onRestoreInstanceState(state.superState)
         //end
@@ -233,10 +234,14 @@ class SortView : View {
 
     private fun returnDefault() {
         if (mValues != null) {
-            for (i in mListSortValue.indices) {
-                val sortValue = mListSortValue[i]
-                sortValue.isSort = false
-                sortValue.value = mValues!![i]
+            if (mListSortValue.isEmpty()){
+                setData(width,height)
+            }else{
+                for (i in mListSortValue.indices) {
+                    val sortValue = mListSortValue[i]
+                    sortValue.isSort = false
+                    sortValue.value = mValues!![i]
+                }
             }
         }
         animationDuration(mDuration)
@@ -286,20 +291,22 @@ class SortView : View {
             animatorTransitionXLarge!!.resume()
     }
 
-//    private fun cancelAnimation() {
-//        if (animatorTransitionYUpSmall!!.isRunning || animatorTransitionYUpSmall!!.isPaused)
-//            animatorTransitionYUpSmall!!.cancel()
-//        if (animatorTransitionYDownSmall!!.isRunning || animatorTransitionYDownSmall!!.isPaused)
-//            animatorTransitionYDownSmall!!.cancel()
-//        if (animatorTransitionXSmall!!.isRunning || animatorTransitionXSmall!!.isPaused)
-//            animatorTransitionXSmall!!.cancel()
-//        if (animatorTransitionYDownLarge!!.isRunning || animatorTransitionYDownLarge!!.isPaused)
-//            animatorTransitionYDownLarge!!.cancel()
-//        if (animatorTransitionYUpLarge!!.isRunning || animatorTransitionYUpLarge!!.isPaused)
-//            animatorTransitionYUpLarge!!.cancel()
-//        if (animatorTransitionXLarge!!.isRunning || animatorTransitionXLarge!!.isPaused)
-//            animatorTransitionXLarge!!.cancel()
-//    }
+    fun cancelAnimation() {
+        isRelease = true
+        Logger.debug("cancelAnimation")
+        if (animatorTransitionYUpSmall!!.isRunning || animatorTransitionYUpSmall!!.isPaused)
+            animatorTransitionYUpSmall!!.cancel()
+        if (animatorTransitionYDownSmall!!.isRunning || animatorTransitionYDownSmall!!.isPaused)
+            animatorTransitionYDownSmall!!.cancel()
+        if (animatorTransitionXSmall!!.isRunning || animatorTransitionXSmall!!.isPaused)
+            animatorTransitionXSmall!!.cancel()
+        if (animatorTransitionYDownLarge!!.isRunning || animatorTransitionYDownLarge!!.isPaused)
+            animatorTransitionYDownLarge!!.cancel()
+        if (animatorTransitionYUpLarge!!.isRunning || animatorTransitionYUpLarge!!.isPaused)
+            animatorTransitionYUpLarge!!.cancel()
+        if (animatorTransitionXLarge!!.isRunning || animatorTransitionXLarge!!.isPaused)
+            animatorTransitionXLarge!!.cancel()
+    }
 
     fun setTypeSort(typeSort: SortType) {
         this.sortType = typeSort
@@ -311,127 +318,158 @@ class SortView : View {
 
     private fun updateAnimationListener() {
         animatorTransitionYUpSmall!!.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            when (sortType) {
-                SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
-                    Log.d(TAG, "animatorTransitionYUpSmall value : $value")
-                    if (rectTempSmall != null) {
-                        Log.d(
-                            TAG, "rectTempSmall : " + "\n"
-                                    + "rectTempSmall.top : " + rectTempSmall!!.top + " | "
-                                    + "rectTempSmall.bottom : " + rectTempSmall!!.bottom + " | "
-                                    + "rectTempSmall.left : " + rectTempSmall!!.left + " | "
-                                    + "rectTempSmall.right : " + rectTempSmall!!.right + ") "
-                        )
-                        mListSortValue[temp].rect!!.top = rectTempSmall!!.top - value
-                        mListSortValue[temp].rect!!.bottom = rectTempSmall!!.bottom - value
-                        Log.d(
-                            TAG, "mListSortValue.get(temp).getRect : (temp = " + temp + ")" + "\n"
-                                    + "rect.top : " + mListSortValue[temp].rect!!.top + " | "
-                                    + "rect.bottom : " + mListSortValue[temp].rect!!.bottom + " | "
-                                    + "rect.left :" + mListSortValue[temp].rect!!.left + " | "
-                                    + "rect.right : " + mListSortValue[temp].rect!!.right
-                        )
+            run {
+                if (isRelease)
+                    return@run
+                val value = animation.animatedValue as Int
+                when (sortType) {
+                    SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
+                        Logger.debug("animatorTransitionYUpSmall value : $value")
+                        if (rectTempSmall != null) {
+                            Logger.debug(
+                                "rectTempSmall : " + "\n"
+                                        + "rectTempSmall.top : " + rectTempSmall!!.top + " | "
+                                        + "rectTempSmall.bottom : " + rectTempSmall!!.bottom + " | "
+                                        + "rectTempSmall.left : " + rectTempSmall!!.left + " | "
+                                        + "rectTempSmall.right : " + rectTempSmall!!.right + ") "
+                            )
+                            mListSortValue[temp].rect!!.top = rectTempSmall!!.top - value
+                            mListSortValue[temp].rect!!.bottom = rectTempSmall!!.bottom - value
+                            Logger.debug(
+                                "mListSortValue.get(temp).getRect : (temp = " + temp + ")" + "\n"
+                                        + "rect.top : " + mListSortValue[temp].rect!!.top + " | "
+                                        + "rect.bottom : " + mListSortValue[temp].rect!!.bottom + " | "
+                                        + "rect.left :" + mListSortValue[temp].rect!!.left + " | "
+                                        + "rect.right : " + mListSortValue[temp].rect!!.right
+                            )
 
+                            invalidate()
+                        } else {
+                            Logger.debug("rectTempSmall null")
+                        }
+                    }
+                    SortType.INSERTIONSORTII -> if (rectTempSmall != null) {
+                        mListSortValue[insertionsortTemp].rect!!.top = rectTempSmall!!.top - value
+                        mListSortValue[insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom - value
                         invalidate()
                     } else {
-                        Log.d(TAG, "rectTempSmall null")
+                        Logger.debug("rectTempSmall null")
                     }
-                }
-                SortType.INSERTIONSORTII -> if (rectTempSmall != null) {
-                    mListSortValue[insertionsortTemp].rect!!.top = rectTempSmall!!.top - value
-                    mListSortValue[insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom - value
-                    invalidate()
-                } else {
-                    Log.d(TAG, "rectTempSmall null")
                 }
             }
         }
 
         animatorTransitionYDownSmall!!.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            if (rectTempSmall != null) {
-                when (sortType) {
-                    SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
-                        mListSortValue[temp].rect!!.top = rectTempSmall!!.top + value
-                        mListSortValue[temp].rect!!.bottom = rectTempSmall!!.bottom + value
-                        invalidate()
-                    }
-                    SortType.INSERTIONSORTII -> {
-                        mListSortValue[insertionsortTemp].rect!!.top = rectTempSmall!!.top + value
-                        mListSortValue[insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom + value
-                        invalidate()
+            run {
+                if (isRelease)
+                    return@run
+                val value = animation.animatedValue as Int
+                if (rectTempSmall != null) {
+                    when (sortType) {
+                        SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
+                            mListSortValue[temp].rect!!.top = rectTempSmall!!.top + value
+                            mListSortValue[temp].rect!!.bottom = rectTempSmall!!.bottom + value
+                            invalidate()
+                        }
+                        SortType.INSERTIONSORTII -> {
+                            mListSortValue[insertionsortTemp].rect!!.top = rectTempSmall!!.top + value
+                            mListSortValue[insertionsortTemp].rect!!.bottom = rectTempSmall!!.bottom + value
+                            invalidate()
+                        }
                     }
                 }
             }
         }
 
         animatorTransitionXSmall!!.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            if (rectTempSmall != null) {
-                when (sortType) {
-                    SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
-                        mListSortValue[temp].rect!!.left = rectTempSmall!!.left - value
-                        mListSortValue[temp].rect!!.right = rectTempSmall!!.right - value
-                        invalidate()
-                    }
-                    SortType.INSERTIONSORTII -> {
-                        mListSortValue[insertionsortTemp].rect!!.left = rectTempSmall!!.left - value
-                        mListSortValue[insertionsortTemp].rect!!.right = rectTempSmall!!.right - value
-                        invalidate()
+            run {
+                if (isRelease)
+                    return@run
+                val value = animation.animatedValue as Int
+                if (rectTempSmall != null) {
+                    when (sortType) {
+                        SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
+                            mListSortValue[temp].rect!!.left = rectTempSmall!!.left - value
+                            mListSortValue[temp].rect!!.right = rectTempSmall!!.right - value
+                            invalidate()
+                        }
+                        SortType.INSERTIONSORTII -> {
+                            mListSortValue[insertionsortTemp].rect!!.left = rectTempSmall!!.left - value
+                            mListSortValue[insertionsortTemp].rect!!.right = rectTempSmall!!.right - value
+                            invalidate()
+                        }
                     }
                 }
             }
         }
 
         animatorTransitionYDownLarge!!.addUpdateListener { animation ->
-            if (rectTempLarge != null) {
-                val value = animation.animatedValue as Int
-                mListSortValue[begin].rect!!.top = rectTempLarge!!.top + value
-                mListSortValue[begin].rect!!.bottom = rectTempLarge!!.bottom + value
-                invalidate()
+            run {
+                if (isRelease)
+                    return@run
+                if (rectTempLarge != null) {
+                    val value = animation.animatedValue as Int
+                    mListSortValue[begin].rect!!.top = rectTempLarge!!.top + value
+                    mListSortValue[begin].rect!!.bottom = rectTempLarge!!.bottom + value
+                    invalidate()
+                }
             }
         }
 
         animatorTransitionXLarge!!.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            when (sortType) {
-                SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> if (rectTempLarge != null) {
-                    Log.d(
-                        TAG, "rectTempLarge : " + "\n"
-                                + "rectTempLarge.top : " + rectTempLarge!!.top + " | "
-                                + "rectTempLarge.bottom : " + rectTempLarge!!.bottom + " | "
-                                + "rectTempLarge.left : " + rectTempLarge!!.left + " | "
-                                + "rectTempLarge.right : " + rectTempLarge!!.right + ") "
-                    )
-                    mListSortValue[begin].rect!!.left = rectTempLarge!!.left + value
-                    mListSortValue[begin].rect!!.right = rectTempLarge!!.right + value
-                    Log.d(
-                        TAG, "mListSortValue.get(begin).getRect : (begin = " + begin + ")" + "\n"
-                                + "rect.top : " + mListSortValue[begin].rect!!.top + " | "
-                                + "rect.bottom : " + mListSortValue[begin].rect!!.bottom + " | "
-                                + "rect.left :" + mListSortValue[begin].rect!!.left + " | "
-                                + "rect.right : " + mListSortValue[begin].rect!!.right
-                    )
-                    invalidate()
-                }
-                SortType.INSERTIONSORTII -> if (valueTemp != -1) {
-                    for (i in temp until insertionsortTemp) {
-                        val rect = mListSortValue[i].rect
-                        rect!!.set(rect.left - valueTemp + value, rect.top, rect.right - valueTemp + value, rect.bottom)
+            run {
+                if (isRelease)
+                    return@run
+
+                val value = animation.animatedValue as Int
+                when (sortType) {
+                    SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> if (rectTempLarge != null) {
+                        Logger.debug(
+                            "rectTempLarge : " + "\n"
+                                    + "rectTempLarge.top : " + rectTempLarge!!.top + " | "
+                                    + "rectTempLarge.bottom : " + rectTempLarge!!.bottom + " | "
+                                    + "rectTempLarge.left : " + rectTempLarge!!.left + " | "
+                                    + "rectTempLarge.right : " + rectTempLarge!!.right + ") "
+                        )
+                        mListSortValue[begin].rect!!.left = rectTempLarge!!.left + value
+                        mListSortValue[begin].rect!!.right = rectTempLarge!!.right + value
+                        Logger.debug(
+                            "mListSortValue.get(begin).getRect : (begin = " + begin + ")" + "\n"
+                                    + "rect.top : " + mListSortValue[begin].rect!!.top + " | "
+                                    + "rect.bottom : " + mListSortValue[begin].rect!!.bottom + " | "
+                                    + "rect.left :" + mListSortValue[begin].rect!!.left + " | "
+                                    + "rect.right : " + mListSortValue[begin].rect!!.right
+                        )
+                        invalidate()
                     }
-                    valueTemp = value
-                    invalidate()
+                    SortType.INSERTIONSORTII -> if (valueTemp != -1) {
+                        for (i in temp until insertionsortTemp) {
+                            val rect = mListSortValue[i].rect
+                            rect!!.set(
+                                rect.left - valueTemp + value,
+                                rect.top,
+                                rect.right - valueTemp + value,
+                                rect.bottom
+                            )
+                        }
+                        valueTemp = value
+                        invalidate()
+                    }
                 }
             }
         }
 
         animatorTransitionYUpLarge!!.addUpdateListener { animation ->
-            if (rectTempLarge != null) {
-                val value = animation.animatedValue as Int
-                mListSortValue[begin].rect!!.top = rectTempLarge!!.top - value
-                mListSortValue[begin].rect!!.bottom = rectTempLarge!!.bottom - value
-                invalidate()
+            run {
+                if (isRelease)
+                    return@run
+
+                if (rectTempLarge != null) {
+                    val value = animation.animatedValue as Int
+                    mListSortValue[begin].rect!!.top = rectTempLarge!!.top - value
+                    mListSortValue[begin].rect!!.bottom = rectTempLarge!!.bottom - value
+                    invalidate()
+                }
             }
         }
 
@@ -445,6 +483,8 @@ class SortView : View {
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                if (isRelease)
+                    return
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
                         if (rectTempSmall != null) {
@@ -452,7 +492,7 @@ class SortView : View {
                         }
                         mDistance =
                             Math.abs(mListSortValue[temp].rect!!.centerX() - mListSortValue[begin].rect!!.centerX())
-                        Log.d(TAG, "distance : $mDistance")
+                        Logger.debug("distance : $mDistance")
                         animatorTransitionXSmall!!.setIntValues(0, mDistance)
                         if (insertionSwap)
                             animatorTransitionXSmall!!.duration = mDuration.toLong()
@@ -488,6 +528,8 @@ class SortView : View {
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                if (isRelease)
+                    return
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
                         if (rectTempSmall != null) {
@@ -519,6 +561,8 @@ class SortView : View {
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                if (isRelease)
+                    return
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> rectTempSmall =
                         null
@@ -563,6 +607,8 @@ class SortView : View {
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                if (isRelease)
+                    return
                 if (rectTempLarge != null) {
                     rectTempLarge!!.set(mListSortValue[begin].rect!!)
                 }
@@ -588,6 +634,8 @@ class SortView : View {
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                if (isRelease)
+                    return
                 when (sortType) {
                     SortType.SELECTIONSORT, SortType.INSERTIONSORTI, SortType.BUBBLESORT, SortType.QUICKSORT -> {
                         if (rectTempLarge != null) {
@@ -624,6 +672,8 @@ class SortView : View {
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                if (isRelease)
+                    return
                 when (sortType) {
                     SortType.SELECTIONSORT -> {
                         rectTempLarge = null
@@ -719,6 +769,8 @@ class SortView : View {
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                if (isRelease)
+                    return
                 isPartition = true
                 animatorTransitionYUpSmall!!.start()
                 animatorTransitionYDownLarge!!.start()
@@ -746,19 +798,20 @@ class SortView : View {
     }
 
     fun setListValue(values: Array<Int>) {
-        Log.d(TAG,"setListValue")
+        Logger.debug("setListValue")
         mValues = values
-        returnDefault()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        setData(w,h)
+    }
+
+    private fun setData(w: Int, h: Int){
         val width = w - (paddingLeft + paddingRight)
         val height = h - (paddingTop + paddingBottom)
 
-        Log.d(TAG,"onSizeChanged")
-
-        mListSortValue.clear()
+        Logger.debug("onSizeChanged")
 
         if (mValues != null) {
             val rectSize = width / mValues!!.size
@@ -777,15 +830,7 @@ class SortView : View {
                     xLeft = xRight
                     xRight += rectSize
                 }
-            } /*else {
-//                for (SortValue sortValue : mListSortValue) {
-//                    Rect rect = sortValue.getRect();
-//                    rect.top = rect.top * height / width;
-//                    rect.bottom = rect.bottom * height / width;
-//                    rect.left = rect.left * width / height;
-//                    rect.right = rect.right * width / height;
-//                }
-            }*/
+            }
         }
     }
 

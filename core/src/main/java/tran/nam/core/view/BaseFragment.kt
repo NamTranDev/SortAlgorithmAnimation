@@ -24,6 +24,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import tran.nam.Logger
 import tran.nam.core.R
 
 abstract class BaseFragment : Fragment() {
@@ -58,6 +59,7 @@ abstract class BaseFragment : Fragment() {
             mViewDestroyed = false
             mWaitThread?.continueProcessing()
         }
+
     }
 
     open fun isWaitProgress(): Boolean {
@@ -107,24 +109,20 @@ abstract class BaseFragment : Fragment() {
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         var animation = super.onCreateAnimation(transit, enter, nextAnim)
-//        Logger.debug("Animation Fragment : $this")
-//        Logger.debug("Animation Fragment - onCreateAnimation : $animation")
-//        Logger.debug("Animation Fragment - nextAnim : $nextAnim")
+        Logger.debug(animation)
         if (enter) {
             if (animation == null && nextAnim != 0) {
-                animation = AnimationUtils.loadAnimation(activity, nextAnim);
+                animation = AnimationUtils.loadAnimation(activity, nextAnim)
             }
 
-            view?.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            view?.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
             animation?.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {}
                 override fun onAnimationEnd(animation: Animation) {
-                    view?.setLayerType(View.LAYER_TYPE_NONE, null);
+                    view?.setLayerType(View.LAYER_TYPE_NONE, null)
                     if (mViewDestroyed)
                         return
-//                    Logger.debug("Animation Fragment : " + "onAnimationEnd")
-//                    Logger.debug("Animation Fragment : $mWaitThread")
                     if (mWaitThread == null) {
                         mWaitThread = WaitThread(this@BaseFragment)
                         mWaitThread?.start()
@@ -134,6 +132,7 @@ abstract class BaseFragment : Fragment() {
                 override fun onAnimationRepeat(animation: Animation) {}
             })
         }
+
 
         return animation
     }

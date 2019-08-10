@@ -5,5 +5,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:padding="@dimen/positive_20dp"
         android:id="@+id/sortExample"
         app:cardUseCompatPadding="true"/>

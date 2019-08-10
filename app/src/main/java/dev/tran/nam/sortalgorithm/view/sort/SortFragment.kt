@@ -10,8 +10,6 @@ import tran.nam.core.view.BaseFragment
 
 class SortFragment : BaseFragment() {
 
-    lateinit var mCardView : CardView
-
     override fun layoutId(): Int {
         return R.layout.fragment_sort
     }
@@ -37,9 +35,16 @@ class SortFragment : BaseFragment() {
                 }
             }
             sortExample.setTypeSort(type)
-
+            sortExample.setListValue(arrayOf(15,8,5,12,56))
         }
-        sortExample.setListValue(arrayOf(15,8,5,12,56))
+    }
+
+    override fun onInitialized() {
         sortExample.startAnimation()
+    }
+
+    override fun onDestroyView() {
+        sortExample.cancelAnimation()
+        super.onDestroyView()
     }
 }

@@ -1,8 +1,10 @@
 package tran.nam.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
@@ -11,6 +13,14 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import androidx.core.graphics.drawable.DrawableCompat
+import android.os.Build
+import androidx.core.content.ContextCompat
+import android.graphics.drawable.Drawable
+
+
 
 class BitmapUtil {
 
@@ -161,6 +171,24 @@ class BitmapUtil {
             crop: Boolean = false
         ): Bitmap {
             return decodeBitmapFromExitPath(file.absolutePath, reqWidth, reqHeight, bitmapConfig, crop)
+        }
+
+        @SuppressLint("ObsoleteSdkInt")
+        fun getBitmapFromVectorDrawable(context: Context, drawableId: Int): Bitmap {
+            var drawable = ContextCompat.getDrawable(context, drawableId)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                drawable = DrawableCompat.wrap(drawable!!).mutate()
+            }
+
+            val bitmap = Bitmap.createBitmap(
+                drawable!!.intrinsicWidth,
+                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+
+            return bitmap
         }
 
         private fun crop(source: Bitmap, showWidth: Int, showHeight: Int): Bitmap {

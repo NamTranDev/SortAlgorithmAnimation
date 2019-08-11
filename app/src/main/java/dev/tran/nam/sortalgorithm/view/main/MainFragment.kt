@@ -20,8 +20,8 @@ class MainFragment : BaseFragment(), IMenuListener {
 
     override fun onInitialized() {
         Logger.debug("onInitialized")
-        menuView.initIcons(arrayOf(MenuItem("Selection Sort",1),MenuItem("Insertion Sort",1)
-        ,MenuItem("Bubble Sort",1),MenuItem("Quick Sort",1)))
+        menuView.initIcons(arrayOf(MenuItem("Selection Sort",R.drawable.icon_select),MenuItem("Insertion Sort",R.drawable.icon_insert)
+        ,MenuItem("Bubble Sort",R.drawable.icon_bubble),MenuItem("Quick Sort",R.drawable.icon_quick)))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

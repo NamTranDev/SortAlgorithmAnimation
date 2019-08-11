@@ -26,5 +26,10 @@ class DisplayUtil {
             val r = context.resources
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dp, r.displayMetrics)
         }
+
+        fun scaleDensity(context: Context): Float {
+            val displayMetrics = context.resources.displayMetrics
+            return displayMetrics.widthPixels.toFloat() / displayMetrics.density / 320f
+        }
     }
 }

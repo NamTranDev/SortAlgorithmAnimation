@@ -12,6 +12,8 @@ import android.view.MotionEvent
 import android.view.View
 import dev.tran.nam.sort.algorithm.R
 import tran.nam.Logger
+import tran.nam.util.BitmapUtil.Companion.getBitmapFromVectorDrawable
+import tran.nam.util.DisplayUtil.Companion.scaleDensity
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -21,13 +23,13 @@ import kotlin.math.sqrt
 class MenuHalfCircleView : View {
 
     private lateinit var mPaintOval: Paint
-    private lateinit var mPaintPoint: Paint
+    private lateinit var mPaintMenu: Paint
     private lateinit var mPaintText: TextPaint
     private lateinit var mRectOval: RectF
-    private val mDistanceTextToIcon = 0F
     private var mMenuItems = mutableListOf<MenuItem>()
     private var mMenuSize = 0
-    private val mDistanceHalfHeight = 100F
+    private val mDistanceHalfHeight = 50F
+    private val mDistanceTextToIcon = 75F
     private var mSweepAngle = 0F
     private var mSweepAngleChild = 0F
     private var mPositionCharAt = 0
@@ -71,16 +73,17 @@ class MenuHalfCircleView : View {
         mPaintOval.style = Paint.Style.STROKE
         mPaintOval.strokeCap = Paint.Cap.ROUND
 
-        mPaintPoint = Paint()
-        mPaintPoint.isAntiAlias = true
-        mPaintPoint.isFilterBitmap = true
+        mPaintMenu = Paint()
+        mPaintMenu.isAntiAlias = true
+        mPaintMenu.color = Color.BLUE
+        mPaintMenu.style = Paint.Style.FILL
 
         mPaintText = TextPaint()
         mPaintText.isAntiAlias = true
         mPaintText.isDither = true
         mPaintText.color = Color.BLACK
         mPaintText.strokeWidth = 15f
-        mPaintText.textSize = 45f
+        mPaintText.textSize = 30f * scaleDensity(context)
         mPaintText.strokeJoin = Paint.Join.ROUND
         mPaintText.strokeCap = Paint.Cap.ROUND
 
@@ -180,7 +183,9 @@ class MenuHalfCircleView : View {
         mMenuSize = mMenuItems.size + 1
         mAngleCirleMain /= mMenuSize
 
-        val pointIntersection = createMenuItem(mMenuItems[0], mAngleCirleMain - 90)
+        mRadiusCircleChild = ((height / mMenuItems.size) / 4).toFloat()
+
+        val pointIntersection = createMenuItem(mMenuItems[0], mAngleCirleMain - 90, mRadiusCircleChild)
 
         mAngleDistanceCircleChild = 180 - findAngle(mCenterCircleMain, pointIntersection)
         mAngleDistanceCircleChild = mAngleCirleMain - mAngleDistanceCircleChild
@@ -190,7 +195,7 @@ class MenuHalfCircleView : View {
         mAnimatorDrawCircleMain.setFloatValues(0F, mAngleCirleMain/* - mAngleDistanceCircleChild*/)
 
         for (i in 2 until mMenuSize) {
-            createMenuItem(mMenuItems[i - 1], mAngleCirleMain * i - 90)
+            createMenuItem(mMenuItems[i - 1], mAngleCirleMain * i - 90, mRadiusCircleChild)
         }
 
         Logger.debug(mListMenu)
@@ -242,16 +247,20 @@ class MenuHalfCircleView : View {
         mCenterCircleMain.set(mRectOval.centerX(), mRectOval.centerY())
 
         if (mListMenu.size > 0) {
+            mRadiusCircleChild = ((height / mListMenu.size) / 4).toFloat()
             mSweepAngle = 180F
             mSweepAngleChild = 360F
             iMenuListener?.OnMenuCompleteAnimation()
         }
     }
 
-    private fun createMenuItem(menu: MenuItem, angle: Float): PointF {
-//        val bmp = BitmapFactory.decodeResource(resources, mMenuItems[position])
-//        val shader = BitmapShader(bmp, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-
+    private fun createMenuItem(
+        menu: MenuItem,
+        angle: Float,
+        radius: Float
+    ): PointF {
+        var bmp = getBitmapFromVectorDrawable(context, menu.icon)
+        bmp = Bitmap.createScaledBitmap(bmp, radius.toInt(), radius.toInt(), false)
         val point = getPosition(
             PointF(0F, height / 2.toFloat()), height / 2 - mDistanceHalfHeight
             , angle
@@ -266,6 +275,7 @@ class MenuHalfCircleView : View {
         } else {
             point.x + mRadiusCircleChild + mDistanceTextToIcon
         }
+        val yText = point.y + rectText.height() / 2
         Logger.debug(startText)
 
         val pointIntersection =
@@ -276,7 +286,14 @@ class MenuHalfCircleView : View {
             point.x - mRadiusCircleChild, point.y - mRadiusCircleChild
             , point.x + mRadiusCircleChild, point.y + mRadiusCircleChild
         )
-        mListMenu.add(MenuCircle(point, PointF(startText, point.y + rectText.height() / 2), menu.text, rect, startAngle))
+        val menuItem = MenuCircle(
+            point, PointF(startText, yText), menu.text, rect, RectF(
+                startText, yText - rectText.height()
+                , startText + rectText.width(), yText
+            ), startAngle
+        )
+        menuItem.mIcon = bmp
+        mListMenu.add(menuItem)
         return pointIntersection
     }
 
@@ -325,15 +342,34 @@ class MenuHalfCircleView : View {
         for (menu in mListMenu) {
             if (menu.isDraw) {
                 val center = menu.centerPoint
-                canvas?.drawCircle(center.x, center.y, mRadiusCircleChild, mPaintPoint)
+                canvas?.drawCircle(center.x, center.y, mRadiusCircleChild, mPaintMenu)
                 canvas?.drawText(menu.mText,menu.startTextPoint.x,menu.startTextPoint.y,mPaintText)
+
+                menu.mIcon?.run {
+                    canvas?.drawBitmap(
+                        this,
+                        menu.centerPoint.x - width / 2,
+                        menu.centerPoint.y - height / 2,
+                        mPaintMenu
+                    )
+                }
         }
             if (menu.isDrawing) {
 //                mPathCircleChild.reset()
-//                mPathCircleChild.arcTo(menu.rectF, menu.startAngle, mSweepAngleChild)
-//                canvas?.drawPath(mPathCircleChild, mPaintPoint)
-                canvas?.drawArc(menu.rectF, menu.startAngle, mSweepAngleChild, true, mPaintPoint)
+//                mPathCircleChild.arcTo(menu.rectIcon, menu.startAngle, mSweepAngleChild)
+//                canvas?.drawPath(mPathCircleChild, mPaintMenu)
+                canvas?.drawArc(menu.rectIcon, menu.startAngle, mSweepAngleChild, true, mPaintMenu)
                 canvas?.drawText(menu.mText.substring(0,mPositionCharAt),menu.startTextPoint.x,menu.startTextPoint.y,mPaintText)
+
+                menu.mIcon?.run {
+                    canvas?.drawBitmap(
+                        this,
+                        menu.centerPoint.x - width / 2,
+                        menu.centerPoint.y - height / 2,
+                        mPaintMenu
+                    )
+                }
+
             }
         }
     }
@@ -346,7 +382,7 @@ class MenuHalfCircleView : View {
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
                     for ((index, menu) in mListMenu.withIndex()) {
-                        if (menu.rectF.contains(touchX, touchY)) {
+                        if (menu.rectIcon.contains(touchX, touchY) || menu.rectText.contains(touchX, touchY)) {
                             iMenuListener?.OnMenuClick(index)
                         }
                     }

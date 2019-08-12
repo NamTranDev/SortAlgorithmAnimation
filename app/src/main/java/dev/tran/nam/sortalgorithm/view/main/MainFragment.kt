@@ -55,4 +55,9 @@ class MainFragment : BaseFragment(), IMenuListener {
     override fun OnMenuCompleteAnimation() {
 
     }
+
+    override fun onDestroyView() {
+        menuView.cancelAnimation()
+        super.onDestroyView()
+    }
 }

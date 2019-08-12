@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SortAlgorithmAnimation.iml" filepath="$PROJECT_DIR$/SortAlgorithmAnimation.iml" />
       <module fileurl="file://$PROJECT_DIR$/SortAnimation.iml" filepath="$PROJECT_DIR$/SortAnimation.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />

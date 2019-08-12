@@ -3,4 +3,11 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    
+    <color name="smoky_black">#100007</color>
+    <color name="lico_rice">#200116</color>
+    <color name="zinnwaldite_brown">#2D0605</color>
+    <color name="dark_scarlet">#4C0827</color>
+
+    <color name="in_button">@android:color/white</color>
 </resources>

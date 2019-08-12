@@ -1,8 +1,5 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:autoMirrored="true"
-        android:height="@dimen/icon_size"
-        android:viewportHeight="24.0"
-        android:viewportWidth="24.0"
-        android:width="@dimen/icon_size">
-    <path android:fillColor="#FF000000" android:pathData="M19,13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+<vector android:autoMirrored="true" android:height="@dimen/icon_size"
+    android:viewportHeight="1024" android:viewportWidth="1024"
+    android:width="@dimen/icon_size" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/in_button" android:pathData="M921.6,409.6 L614.4,409.6 614.4,102.4c0,-56.57 -45.83,-102.4 -102.4,-102.4s-102.4,45.83 -102.4,102.4l0,307.2L102.4,409.6c-56.57,0 -102.4,45.83 -102.4,102.4 0,56.55 45.83,102.4 102.4,102.4l307.2,0 0,307.2c0,56.55 45.83,102.4 102.4,102.4s102.4,-45.85 102.4,-102.4L614.4,614.4l307.2,0c56.57,0 102.4,-45.85 102.4,-102.4C1024,455.43 978.17,409.6 921.6,409.6z"/>
 </vector>

@@ -35,6 +35,7 @@ object StatusBarUtil {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             activity.window.statusBarColor = calculateStatusColor(color, statusBarAlpha)
+            activity.window.navigationBarColor = calculateStatusColor(color, statusBarAlpha)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             val decorView = activity.window.decorView as ViewGroup

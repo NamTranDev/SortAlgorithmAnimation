@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dev.tran.nam.sortalgorithm.widget.SortView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:padding="@dimen/positive_20dp"
+        android:id="@+id/sortExample"
+        app:cardUseCompatPadding="true"/>

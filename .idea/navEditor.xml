@@ -8,6 +8,18 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="imageDetailFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="404" />
+                            <option name="y" value="358" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="mainFragment">
                     <value>
                       <LayoutPositions>
@@ -52,6 +64,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_sortFragment_to_imageDetailFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_sortFragment_to_sortExampleFragment">
                               <value>
                                 <LayoutPositions />

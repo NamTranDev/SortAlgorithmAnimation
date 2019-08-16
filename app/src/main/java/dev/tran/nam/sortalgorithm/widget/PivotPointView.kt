@@ -5,13 +5,9 @@ import android.graphics.Point
 
 class PivotPointView {
     var pointText: Point? = null
-        private set
     var firstLine: Point? = null
-        private set
     var lastLine: Point? = null
-        private set
     var pathArrow: Path? = null
-        private set
 
     init {
         init()

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="dev.tran.nam.sort.algorithm">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="dev.tran.nam.sort.algorithm">
 
     <application
             android:name="dev.tran.nam.sortalgorithm.view.AppState"

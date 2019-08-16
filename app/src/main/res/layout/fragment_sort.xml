@@ -22,14 +22,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05"/>
+                app:layout_constraintGuide_begin="@dimen/positive_15dp"/>
 
         <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideEnd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95"/>
+                app:layout_constraintGuide_end="@dimen/positive_15dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="0dp"
@@ -50,26 +50,38 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:fillViewport="true"
+                android:scrollbars="vertical"
                 android:layout_marginBottom="@dimen/positive_10dp"
                 android:layout_marginTop="@dimen/positive_10dp"
+                android:paddingStart="@dimen/positive_2dp"
+                android:paddingEnd="@dimen/positive_2dp"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                 app:layout_constraintBottom_toTopOf="@+id/btExam1"
-                app:layout_constraintStart_toStartOf="@id/guideStart"
-                app:layout_constraintEnd_toEndOf="@id/guideEnd">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <LinearLayout
+            <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ivDescription"
+                        android:transitionName="imageView"
+                        android:scaleType="centerInside"
+                        app:loadImageSortDescription="@{type}"
+                        tools:src="@drawable/image_selection_sort"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/ivDescription"
-                        android:scaleType="centerInside"
-                        app:loadImageSortDescription="@{type}"
-                        tools:src="@drawable/image_selection_sort"/>
+                        android:onClick="@{() -> view.viewImage()}"
+                        android:layout_marginStart="@dimen/positive_13dp"
+                        android:layout_marginEnd="@dimen/positive_13dp"
+                        app:srcCompat="@drawable/image_expand"
+                        android:layout_alignEnd="@+id/ivDescription"
+                        android:layout_alignBottom="@+id/ivDescription"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
@@ -79,9 +91,12 @@
                         android:textColor="@color/smoky_black"
                         android:fontFamily="@font/medium"
                         android:layout_marginTop="@dimen/positive_20dp"
+                        android:layout_marginStart="@dimen/positive_13dp"
+                        android:layout_marginEnd="@dimen/positive_13dp"
+                        android:layout_below="@+id/ivDescription"
                         tools:text="@string/selection_sort_description"
                         app:loadTextSortDescription="@{type}"/>
-            </LinearLayout>
+            </RelativeLayout>
 
         </androidx.core.widget.NestedScrollView>
 
@@ -89,7 +104,7 @@
         <tran.nam.widget.AnimButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/positive_15dp"
+                android:padding="@dimen/positive_10dp"
                 android:id="@+id/btExam1"
                 android:gravity="center"
                 android:textSize="@dimen/text_size_14sp"
@@ -116,7 +131,7 @@
         <tran.nam.widget.AnimButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/positive_15dp"
+                android:padding="@dimen/positive_10dp"
                 android:id="@+id/btExam2"
                 android:text="@string/example2"
                 android:textColor="@color/in_button"

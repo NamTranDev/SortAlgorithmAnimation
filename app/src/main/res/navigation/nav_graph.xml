@@ -40,12 +40,18 @@
                 app:exitAnim="@anim/slide_left_out"
                 app:popEnterAnim="@anim/slide_left_in"
                 app:popExitAnim="@anim/slide_right_out"/>
+        <action android:id="@+id/action_sortFragment_to_imageDetailFragment" app:destination="@id/imageDetailFragment"/>
     </fragment>
 
     <fragment
             android:id="@+id/sortExampleFragment"
-            android:name="dev.tran.nam.sortalgorithm.view.exam.SortExampleFragment"
+            android:name="dev.tran.nam.sortalgorithm.view.example.SortExampleFragment"
             android:label="SortExampleFragment"
             tools:layout="@layout/fragment_sort_example"/>
+
+    <fragment android:id="@+id/imageDetailFragment"
+              android:name="dev.tran.nam.sortalgorithm.view.image.ImageViewFragment"
+              android:label="ImageDetailFragment"
+              tools:layout="@layout/fragment_image_view"/>
 
 </navigation>

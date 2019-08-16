@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import dev.tran.nam.sort.algorithm.R
 import dev.tran.nam.sort.algorithm.databinding.FragmentSortBinding
 import dev.tran.nam.sortalgorithm.widget.SortType
+import kotlinx.android.synthetic.main.fragment_sort.*
 import tran.nam.core.view.BaseFragment
 
 class SortFragment : BaseFragment() {
@@ -48,6 +51,15 @@ class SortFragment : BaseFragment() {
             }
             mViewDataBinding.type = type
         }
+    }
+
+    fun viewImage() {
+
+        val extras = FragmentNavigatorExtras(
+            ivDescription to "imageView"
+        )
+
+        findNavController().navigate(R.id.action_sortFragment_to_imageDetailFragment, bundleOf("type" to mViewDataBinding.type), null, extras)
     }
 
     fun example(type: Int) {

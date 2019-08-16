@@ -1,13 +1,14 @@
-package dev.tran.nam.sortalgorithm.view.exam
+package dev.tran.nam.sortalgorithm.view.example
 
 import android.os.Bundle
 import android.view.View
 import dev.tran.nam.sort.algorithm.R
 import dev.tran.nam.sortalgorithm.widget.SortType
+import dev.tran.nam.sortalgorithm.widget.SortViewListener
 import kotlinx.android.synthetic.main.fragment_sort_example.*
 import tran.nam.core.view.BaseFragment
 
-class SortExampleFragment : BaseFragment() {
+class SortExampleFragment : BaseFragment(), SortViewListener {
 
     override fun layoutId(): Int {
         return R.layout.fragment_sort_example
@@ -17,8 +18,14 @@ class SortExampleFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         arguments?.run {
             sortExample.setTypeSort(get("type") as SortType)
-            sortExample.setListValue(arrayOf(15,8,5,12,56))
+            val rnds = (8..12).random()
+            val arrayNumber = mutableListOf<Int>()
+            for (i in 1 until rnds){
+                arrayNumber.add((1..50).random())
+            }
+            sortExample.setListValue(arrayNumber.toTypedArray())
         }
+        sortExample.setSortViewListener(this)
     }
 
     override fun onResume() {
@@ -38,5 +45,17 @@ class SortExampleFragment : BaseFragment() {
     override fun onDestroyView() {
         sortExample.cancelAnimation()
         super.onDestroyView()
+    }
+
+    override fun startAnimation() {
+
+    }
+
+    override fun explainSort(text: String) {
+//        tvExplain?.text = text
+    }
+
+    override fun completeAnimation() {
+
     }
 }

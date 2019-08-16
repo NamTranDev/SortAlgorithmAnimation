@@ -29,6 +29,18 @@ class MainFragment : BaseFragment(), IMenuListener {
         menuView.iMenuListener = this
     }
 
+    override fun onResume() {
+        Logger.debug("onResume")
+        menuView.resumeAnimation()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Logger.debug("onPause")
+        menuView.pauseAnimation()
+        super.onPause()
+    }
+
     override fun OnMenuClick(position: Int) {
         val type = when (position) {
             0 -> {
@@ -57,6 +69,7 @@ class MainFragment : BaseFragment(), IMenuListener {
     }
 
     override fun onDestroyView() {
+        Logger.debug("onDestroyView")
         menuView.cancelAnimation()
         super.onDestroyView()
     }

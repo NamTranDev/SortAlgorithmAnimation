@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<dev.tran.nam.sortalgorithm.widget.SortView
+
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
         android:background="@android:color/white"
-        android:padding="@dimen/positive_20dp"
-        android:id="@+id/sortExample"
-        app:cardUseCompatPadding="true"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <dev.tran.nam.sortalgorithm.widget.SortView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/positive_20dp"
+            android:id="@+id/sortExample"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:cardUseCompatPadding="true"/>
+
+    <!--<androidx.appcompat.widget.AppCompatTextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="@dimen/text_size_14sp"-->
+            <!--android:fontFamily="@font/regular"-->
+            <!--android:textColor="@color/smoky_black"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/sortExample"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--android:id="@+id/tvExplain"-->
+            <!--tools:text="2"/>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,7 +46,7 @@ class MenuHalfCircleView : View {
     private var mRadiusCircleChild = 100F
     private var mPositionCirCleChild = 1
     private var mPathCircleMain = Path()
-    private val mDuration = 500L
+    private val mDuration = 250L
     private var mAngleDistanceCircleChild = 0F
     private var isRelease = false
     private var isClick = false
@@ -201,6 +201,35 @@ class MenuHalfCircleView : View {
         mAnimatorDrawCircleMain.start()
     }
 
+    fun resumeAnimation() {
+        if (mAnimatorDrawCircleMain.isPaused)
+            mAnimatorDrawCircleMain.resume()
+        if (mAnimatorDrawCircleChild.isPaused)
+            mAnimatorDrawCircleChild.resume()
+        if (mAnimatorText.isPaused)
+            mAnimatorText.resume()
+    }
+
+    fun pauseAnimation() {
+        if (mAnimatorDrawCircleMain.isRunning)
+            mAnimatorDrawCircleMain.pause()
+        if (mAnimatorDrawCircleChild.isRunning)
+            mAnimatorDrawCircleChild.pause()
+        if (mAnimatorText.isRunning)
+            mAnimatorText.pause()
+    }
+
+    fun cancelAnimation() {
+        isRelease = true
+        Logger.debug("cancelAnimation")
+        if (mAnimatorDrawCircleMain.isRunning || mAnimatorDrawCircleMain.isPaused)
+            mAnimatorDrawCircleMain.cancel()
+        if (mAnimatorDrawCircleChild.isRunning || mAnimatorDrawCircleChild.isPaused)
+            mAnimatorDrawCircleChild.cancel()
+        if (mAnimatorText.isRunning || mAnimatorText.isPaused)
+            mAnimatorText.cancel()
+    }
+
     public override fun onSaveInstanceState(): Parcelable? {
         //begin boilerplate code that allows parent classes to save state
         val superState = super.onSaveInstanceState()
@@ -329,17 +358,6 @@ class MenuHalfCircleView : View {
         val angle =
             Math.toDegrees(atan2((circlePoint.y - point.y).toDouble(), (point.x - circlePoint.x).toDouble())) + 90
         return (if (angle <= 180) angle else angle - 360).toFloat()
-    }
-
-    fun cancelAnimation() {
-        isRelease = true
-        Logger.debug("cancelAnimation")
-        if (mAnimatorDrawCircleMain.isRunning || mAnimatorDrawCircleMain.isPaused)
-            mAnimatorDrawCircleMain.cancel()
-        if (mAnimatorDrawCircleChild.isRunning || mAnimatorDrawCircleChild.isPaused)
-            mAnimatorDrawCircleChild.cancel()
-        if (mAnimatorText.isRunning || mAnimatorText.isPaused)
-            mAnimatorText.cancel()
     }
 
     override fun onDraw(canvas: Canvas?) {

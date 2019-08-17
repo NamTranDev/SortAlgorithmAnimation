@@ -119,21 +119,21 @@ class SortView : View {
         mPaintTextNoSort.style = Paint.Style.FILL
         mPaintTextNoSort.isAntiAlias = true
         mPaintTextNoSort.color = ContextCompat.getColor(context, R.color.smoky_black)
-        mPaintTextNoSort.textSize = 40f * DisplayUtil.scaleDensity(context)
+        mPaintTextNoSort.textSize = 35f * DisplayUtil.scaleDensity(context)
         mPaintTextNoSort.textAlign = Paint.Align.CENTER
 
         mPaintTextSort = TextPaint()
         mPaintTextSort.style = Paint.Style.FILL_AND_STROKE
         mPaintTextSort.isAntiAlias = true
         mPaintTextSort.color = Color.WHITE
-        mPaintTextSort.textSize = 40f * DisplayUtil.scaleDensity(context)
+        mPaintTextSort.textSize = 35f * DisplayUtil.scaleDensity(context)
         mPaintTextSort.textAlign = Paint.Align.CENTER
 
         mPaintTextPivot = TextPaint()
         mPaintTextPivot.style = Paint.Style.FILL_AND_STROKE
         mPaintTextPivot.isAntiAlias = true
         mPaintTextPivot.color = ContextCompat.getColor(context, R.color.smoky_black)
-        mPaintTextPivot.textSize = 40f * DisplayUtil.scaleDensity(context)
+        mPaintTextPivot.textSize = 35f * DisplayUtil.scaleDensity(context)
         mPaintTextPivot.textAlign = Paint.Align.CENTER
 
         animatorTransitionYUpSmall = ValueAnimator.ofInt(0, 200)

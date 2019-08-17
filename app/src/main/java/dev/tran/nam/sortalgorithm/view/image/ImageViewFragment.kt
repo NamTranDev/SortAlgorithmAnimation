@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import dev.tran.nam.sort.algorithm.R
 import dev.tran.nam.sort.algorithm.databinding.FragmentImageViewBinding
 import dev.tran.nam.sortalgorithm.widget.SortType
+import kotlinx.android.synthetic.main.fragment_sort.*
 import tran.nam.core.view.BaseFragment
 
 class ImageViewFragment : BaseFragment() {
@@ -27,7 +31,9 @@ class ImageViewFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

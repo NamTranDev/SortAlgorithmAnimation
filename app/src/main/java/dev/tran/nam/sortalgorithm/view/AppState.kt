@@ -3,6 +3,7 @@ package dev.tran.nam.sortalgorithm.view
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
@@ -13,6 +14,9 @@ import nam.tran.architechture.di.component.AppComponent
 import nam.tran.architechture.di.component.DaggerAppComponent
 import tran.nam.Logger
 import javax.inject.Inject
+import androidx.multidex.MultiDex
+
+
 
 class AppState : Application(), Application.ActivityLifecycleCallbacks,
         HasActivityInjector {
@@ -21,6 +25,11 @@ class AppState : Application(), Application.ActivityLifecycleCallbacks,
         @Inject set
 
     private var appComponent: AppComponent? = null
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
     override fun onCreate() {
         super.onCreate()

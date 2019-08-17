@@ -85,7 +85,7 @@ class MenuHalfCircleView : View {
         mPaintText.isAntiAlias = true
         mPaintText.isDither = true
         mPaintText.color = ContextCompat.getColor(context, R.color.smoky_black)
-        mPaintText.textSize = 50f * scaleDensity(context)
+        mPaintText.textSize = 45f * scaleDensity(context)
         mPaintText.strokeJoin = Paint.Join.ROUND
         mPaintText.strokeCap = Paint.Cap.ROUND
 

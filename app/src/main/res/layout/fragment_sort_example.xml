@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:background="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <dev.tran.nam.sortalgorithm.widget.SortView
+    <data>
+        <variable name="view"
+                  type="dev.tran.nam.sortalgorithm.view.example.SortExampleFragment"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:background="@android:color/white"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:padding="@dimen/positive_20dp"
-            android:id="@+id/sortExample"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:cardUseCompatPadding="true"/>
+            android:layout_height="match_parent">
 
-    <!--<androidx.appcompat.widget.AppCompatTextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:gravity="center"-->
-            <!--android:textSize="@dimen/text_size_14sp"-->
-            <!--android:fontFamily="@font/regular"-->
-            <!--android:textColor="@color/smoky_black"-->
-            <!--app:layout_constraintTop_toBottomOf="@+id/sortExample"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--android:id="@+id/tvExplain"-->
-            <!--tools:text="2"/>-->
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/positive_15dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="@dimen/positive_15dp"/>
+
+        <dev.tran.nam.sortalgorithm.widget.SortView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/sortExample"
+                android:padding="@dimen/positive_15dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/btRework"
+                app:cardUseCompatPadding="true"/>
+
+        <tran.nam.widget.AnimButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/positive_10dp"
+                android:id="@+id/btRework"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_14sp"
+                android:textColor="@color/in_button"
+                android:text="@string/text_rework"
+                android:background="@drawable/background_button"
+                android:onClick="@{() -> view.rework()}"
+                android:visibility="@{view.isCompleteAnimation ? View.VISIBLE : View.GONE}"
+                android:layout_marginBottom="@dimen/positive_10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideStart"
+                app:layout_constraintEnd_toEndOf="@+id/guideEnd"
+                tools:text="@string/text_rework"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
+

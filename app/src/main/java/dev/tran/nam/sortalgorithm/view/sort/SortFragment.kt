@@ -55,11 +55,16 @@ class SortFragment : BaseFragment() {
 
     fun viewImage() {
 
-        val extras = FragmentNavigatorExtras(
-            ivDescription to "imageView"
-        )
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            val extras = FragmentNavigatorExtras(
+                ivDescription to "imageView"
+            )
 
-        findNavController().navigate(R.id.action_sortFragment_to_imageDetailFragment, bundleOf("type" to mViewDataBinding.type), null, extras)
+            findNavController().navigate(R.id.action_sortFragment_to_imageDetailFragment, bundleOf("type" to mViewDataBinding.type), null, extras)
+        }else{
+            findNavController().navigate(R.id.action_sortFragment_to_imageDetailFragment, bundleOf("type" to mViewDataBinding.type))
+        }
+
     }
 
     fun example(type: Int) {

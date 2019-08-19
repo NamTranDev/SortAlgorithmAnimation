@@ -9,6 +9,7 @@ import androidx.databinding.ObservableField
 import dev.tran.nam.sort.algorithm.R
 import dev.tran.nam.sort.algorithm.databinding.FragmentSortBinding
 import dev.tran.nam.sort.algorithm.databinding.FragmentSortExampleBinding
+import dev.tran.nam.sortalgorithm.view.MainActivity
 import dev.tran.nam.sortalgorithm.widget.SortType
 import dev.tran.nam.sortalgorithm.widget.SortViewListener
 import kotlinx.android.synthetic.main.fragment_sort_example.*
@@ -27,6 +28,16 @@ class SortExampleFragment : BaseFragment(), SortViewListener {
     override fun initLayout(inflater: LayoutInflater, container: ViewGroup?): View {
         mViewDataBinding = DataBindingUtil.inflate(inflater, layoutId(), container, false)
         return mViewDataBinding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        showAd()
+    }
+
+    private fun showAd(){
+        if (requireActivity() is MainActivity)
+            (requireActivity() as MainActivity).showAdInterstitial()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,6 +81,7 @@ class SortExampleFragment : BaseFragment(), SortViewListener {
     }
 
     fun rework(){
+        showAd()
         sortExample.startAnimation()
     }
 

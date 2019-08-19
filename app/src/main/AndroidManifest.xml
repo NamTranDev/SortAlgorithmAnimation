@@ -3,6 +3,8 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="dev.tran.nam.sort.algorithm">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
             android:name="dev.tran.nam.sortalgorithm.view.AppState"
             android:allowBackup="true"
@@ -19,6 +21,10 @@
         <meta-data
                 android:name="io.fabric.ApiKey"
                 android:value="4c784c416121cdd52c0fd41cd839185c6056cfdd"/>
+
+        <meta-data
+                android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+                android:value="true"/>
 
         <activity android:name="dev.tran.nam.sortalgorithm.view.MainActivity"
         android:screenOrientation="portrait">

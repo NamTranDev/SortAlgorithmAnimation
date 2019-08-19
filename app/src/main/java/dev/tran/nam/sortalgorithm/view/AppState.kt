@@ -16,10 +16,17 @@ import tran.nam.Logger
 import javax.inject.Inject
 import androidx.multidex.MultiDex
 
-
-
 class AppState : Application(), Application.ActivityLifecycleCallbacks,
         HasActivityInjector {
+
+    companion object {
+        val isAdmod = true
+        private var TIME = 0
+        fun isShowAd(): Boolean {
+            TIME++
+            return TIME % 5 == 0 && isAdmod
+        }
+    }
 
     var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>? = null
         @Inject set

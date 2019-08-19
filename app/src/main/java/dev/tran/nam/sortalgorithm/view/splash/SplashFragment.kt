@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.navigation.Navigation
 import dev.tran.nam.sort.algorithm.R
+import dev.tran.nam.sortalgorithm.view.MainActivity
 import tran.nam.Logger
 import tran.nam.core.view.BaseFragment
 

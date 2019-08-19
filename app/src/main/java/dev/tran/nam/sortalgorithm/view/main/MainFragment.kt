@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import dev.tran.nam.sort.algorithm.R
+import dev.tran.nam.sortalgorithm.view.MainActivity
 import dev.tran.nam.sortalgorithm.widget.IMenuListener
 import dev.tran.nam.sortalgorithm.widget.MenuItem
 import dev.tran.nam.sortalgorithm.widget.SortType
@@ -19,6 +20,11 @@ class MainFragment : BaseFragment(), IMenuListener {
     }
 
     override fun onInitialized() {
+
+        if (requireActivity() is MainActivity){
+            (requireActivity() as MainActivity).showAdBanner()
+        }
+
         Logger.debug("onInitialized")
         menuView.initIcons(arrayOf(MenuItem("Selection Sort",R.drawable.icon_select),MenuItem("Insertion Sort",R.drawable.icon_insert)
         ,MenuItem("Bubble Sort",R.drawable.icon_bubble),MenuItem("Quick Sort",R.drawable.icon_quick)))
